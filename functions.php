@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // ---------------------------------------------------------------------------
 // Define theme constants for convenience.
 // ---------------------------------------------------------------------------
-define( 'GOLDENPINE_VERSION', '1.0.1' );
+define( 'GOLDENPINE_VERSION', '1.0.2' );
 define( 'GOLDENPINE_DIR',     get_template_directory() );
 define( 'GOLDENPINE_URI',     get_template_directory_uri() );
 
@@ -70,3 +70,5 @@ goldenpine_require( 'inc/meta-boxes/video-gallery.php' );
 // ---------------------------------------------------------------------------
 goldenpine_require( 'inc/customizer/customizer-setup.php' );
 goldenpine_require( 'inc/customizer/customizer-about.php' );
+goldenpine_require( 'inc/customizer/customizer-the-space.php' );
+goldenpine_require( 'inc/customizer/customizer-reservation.php' );
