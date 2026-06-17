@@ -69,3 +69,4 @@ goldenpine_require( 'inc/meta-boxes/video-gallery.php' );
 // 4. Customizer.
 // ---------------------------------------------------------------------------
 goldenpine_require( 'inc/customizer/customizer-setup.php' );
+goldenpine_require( 'inc/customizer/customizer-about.php' );
