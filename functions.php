@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // ---------------------------------------------------------------------------
 // Define theme constants for convenience.
 // ---------------------------------------------------------------------------
-define( 'GOLDENPINE_VERSION', '1.0.0' );
+define( 'GOLDENPINE_VERSION', '1.0.1' );
 define( 'GOLDENPINE_DIR',     get_template_directory() );
 define( 'GOLDENPINE_URI',     get_template_directory_uri() );
 
@@ -59,6 +59,12 @@ if ( is_admin() ) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Customizer.
+// 3. Post Types & Meta Boxes.
+// ---------------------------------------------------------------------------
+goldenpine_require( 'inc/post-types/video.php' );
+goldenpine_require( 'inc/meta-boxes/video-gallery.php' );
+
+// ---------------------------------------------------------------------------
+// 4. Customizer.
 // ---------------------------------------------------------------------------
 goldenpine_require( 'inc/customizer/customizer-setup.php' );

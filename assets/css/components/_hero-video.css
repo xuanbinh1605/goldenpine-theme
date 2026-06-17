@@ -1,0 +1,90 @@
+/**
+ * Goldenpine Theme — assets/css/components/_hero-video.css
+ *
+ * Styles for the front-page Hero section:
+ *  - Video crossfade transitions
+ *  - Scroll indicator animation
+ *  - Ticker / marquee animation
+ *
+ * Animation classes referenced by hero-video.js:
+ *  .hero-video          — base video state (hidden)
+ *  .hero-video.is-active — currently visible video
+ *  .hero-video.is-leaving — video fading out
+ *
+ * @package GoldenpineTheme
+ */
+
+/* =========================================================================
+   Video crossfade
+   ========================================================================= */
+
+.hero-video {
+    opacity: 0;
+    transition: opacity 1s ease;
+    will-change: opacity;
+}
+
+.hero-video.is-active {
+    opacity: 1;
+}
+
+.hero-video.is-leaving {
+    opacity: 0;
+}
+
+/* =========================================================================
+   Scroll indicator — animated gradient line
+   ========================================================================= */
+
+@keyframes hero-scroll-pulse {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scaleY(0.6);
+    }
+    50% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+.hero-scroll-line {
+    animation: hero-scroll-pulse 2s ease-in-out infinite;
+    transform-origin: top center;
+}
+
+/* =========================================================================
+   Ticker marquee
+   ========================================================================= */
+
+@keyframes hero-ticker {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.hero-ticker {
+    animation: hero-ticker 32s linear infinite;
+}
+
+/* Pause on hover for accessibility / readability */
+.hero-ticker:hover {
+    animation-play-state: paused;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .hero-ticker {
+        animation: none;
+    }
+
+    .hero-scroll-line {
+        animation: none;
+    }
+
+    .hero-video {
+        transition: none;
+    }
+}

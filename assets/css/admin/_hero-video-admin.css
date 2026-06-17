@@ -1,0 +1,142 @@
+/**
+ * Goldenpine Theme — assets/css/admin/_hero-video-admin.css
+ *
+ * Styles for the Hero Videos gallery meta box on the gpine_video CPT
+ * edit screen. Uses WordPress admin color tokens where possible.
+ *
+ * @package GoldenpineTheme
+ */
+
+/* =========================================================================
+   Gallery container
+   ========================================================================= */
+.gpine-video-gallery {
+    padding: 4px 0 8px;
+}
+
+.gpine-video-gallery__help {
+    color: #646970;
+    margin-bottom: 12px !important;
+}
+
+.gpine-video-gallery__empty {
+    padding: 16px;
+    background: #f6f7f7;
+    border: 1px dashed #c3c4c7;
+    border-radius: 4px;
+    color: #646970;
+    margin-bottom: 12px;
+}
+
+.gpine-video-gallery__add {
+    margin-top: 12px !important;
+}
+
+/* =========================================================================
+   Video list
+   ========================================================================= */
+.gpine-video-list {
+    margin: 0 0 4px;
+    padding: 0;
+    list-style: none;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.gpine-video-list:empty {
+    display: none;
+}
+
+/* =========================================================================
+   Single video item
+   ========================================================================= */
+.gpine-video-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f1;
+    transition: background 0.15s ease;
+}
+
+.gpine-video-item:last-child {
+    border-bottom: none;
+}
+
+.gpine-video-item:hover {
+    background: #f6f7f7;
+}
+
+/* Drag handle */
+.gpine-video-handle {
+    color: #c3c4c7;
+    cursor: grab;
+    flex-shrink: 0;
+    font-size: 20px !important;
+    transition: color 0.15s ease;
+}
+
+.gpine-video-handle:hover {
+    color: #787c82;
+}
+
+.gpine-video-handle:active {
+    cursor: grabbing;
+}
+
+/* File icon */
+.gpine-video-icon {
+    color: #787c82;
+    flex-shrink: 0;
+    font-size: 18px !important;
+}
+
+/* Title */
+.gpine-video-title {
+    flex: 1;
+    font-size: 13px;
+    color: #1d2327;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+/* Action buttons */
+.gpine-video-preview,
+.gpine-video-remove {
+    flex-shrink: 0;
+    line-height: 1 !important;
+    height: 28px !important;
+    padding: 0 8px !important;
+}
+
+.gpine-video-remove {
+    color: #b32d2e !important;
+}
+
+.gpine-video-remove:hover {
+    color: #8a2122 !important;
+}
+
+/* =========================================================================
+   Sortable drag state
+   ========================================================================= */
+.gpine-video-item.ui-sortable-helper {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    border: 1px solid #2271b1;
+    background: #f0f6fc;
+    opacity: 0.95;
+}
+
+/* Placeholder while dragging */
+.gpine-video-placeholder {
+    height: 46px;
+    background: #f0f6fc;
+    border: 2px dashed #2271b1;
+    border-radius: 4px;
+    margin: 2px 0;
+}

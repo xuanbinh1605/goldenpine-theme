@@ -39,7 +39,7 @@ $_gpine_mobile_link_filter = static function ( $atts ) {
 };
 ?>
 
-<header id="site-header" class="site-header sticky top-0 left-0 right-0 z-50 transition-all duration-500 bg-gradient-to-b from-black/70 to-transparent" role="banner">
+<header id="site-header" class="site-header fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-gradient-to-b from-black/70 to-transparent" role="banner">
 
     <!-- ================================================================
          Nav Bar

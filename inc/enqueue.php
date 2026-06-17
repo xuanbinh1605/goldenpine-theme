@@ -45,11 +45,21 @@ function goldenpine_enqueue_assets(): void {
     wp_enqueue_style( 'goldenpine-sidebar',    $uri . '/assets/css/layout/_sidebar.css',    [ 'goldenpine-variables' ], $ver );
 
     // 4. Components
-    wp_enqueue_style( 'goldenpine-buttons',  $uri . '/assets/css/components/_buttons.css', [ 'goldenpine-variables' ], $ver );
-    wp_enqueue_style( 'goldenpine-cards',    $uri . '/assets/css/components/_cards.css',   [ 'goldenpine-variables' ], $ver );
-    wp_enqueue_style( 'goldenpine-forms',    $uri . '/assets/css/components/_forms.css',   [ 'goldenpine-variables' ], $ver );
-    wp_enqueue_style( 'goldenpine-modals',   $uri . '/assets/css/components/_modals.css',  [ 'goldenpine-variables' ], $ver );
-    wp_enqueue_style( 'goldenpine-alerts',   $uri . '/assets/css/components/_alerts.css',  [ 'goldenpine-variables' ], $ver );
+    wp_enqueue_style( 'goldenpine-buttons',     $uri . '/assets/css/components/_buttons.css',    [ 'goldenpine-variables' ], $ver );
+    wp_enqueue_style( 'goldenpine-cards',       $uri . '/assets/css/components/_cards.css',      [ 'goldenpine-variables' ], $ver );
+    wp_enqueue_style( 'goldenpine-forms',       $uri . '/assets/css/components/_forms.css',      [ 'goldenpine-variables' ], $ver );
+    wp_enqueue_style( 'goldenpine-modals',      $uri . '/assets/css/components/_modals.css',     [ 'goldenpine-variables' ], $ver );
+    wp_enqueue_style( 'goldenpine-alerts',      $uri . '/assets/css/components/_alerts.css',     [ 'goldenpine-variables' ], $ver );
+
+    // Hero video component (front page only).
+    if ( is_front_page() ) {
+        wp_enqueue_style(
+            'goldenpine-hero-video',
+            $uri . '/assets/css/components/_hero-video.css',
+            [ 'goldenpine-variables' ],
+            $ver
+        );
+    }
 
     // -----------------------------------------------------------------------
     // Scripts — common (every page)
@@ -86,6 +96,14 @@ function goldenpine_enqueue_assets(): void {
             'goldenpine-front-page',
             $uri . '/assets/js/page-specific-js/front-page.js',
             [ 'goldenpine-utils' ],
+            $ver,
+            true
+        );
+
+        wp_enqueue_script(
+            'goldenpine-hero-video',
+            $uri . '/assets/js/page-specific-js/hero-video.js',
+            [],
             $ver,
             true
         );
