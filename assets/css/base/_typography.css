@@ -1,0 +1,159 @@
+/**
+ * Typography
+ *
+ * Global typeface rules: font imports, base body text, all heading levels,
+ * paragraph spacing, lists, blockquotes, and inline text elements.
+ * Uses the CSS variables defined in _variables.css.
+ *
+ * @package GoldenpineTheme
+ */
+
+/* ------------------------------------------------------------------
+   Google Fonts import — swap to local @font-face rules for production
+------------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap');
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:    var(--font-sans);
+    font-size:      var(--text-base);
+    font-weight:    var(--font-weight-regular);
+    line-height:    var(--line-height-normal);
+    color:          var(--color-text);
+    background-color: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ------------------------------------------------------------------
+   Headings
+------------------------------------------------------------------ */
+h1, h2, h3, h4, h5, h6 {
+    font-family:  var(--font-serif);
+    font-weight:  var(--font-weight-bold);
+    line-height:  var(--line-height-tight);
+    color:        var(--color-heading);
+    margin-top:   0;
+    margin-bottom: var(--space-4);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl);  }
+h5 { font-size: var(--text-lg);  }
+h6 { font-size: var(--text-md);  }
+
+/* ------------------------------------------------------------------
+   Paragraphs & inline
+------------------------------------------------------------------ */
+p {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+}
+
+a {
+    color:           var(--color-link);
+    text-decoration: none;
+    transition:      color var(--transition-fast);
+}
+a:hover,
+a:focus {
+    color:           var(--color-link-hover);
+    text-decoration: underline;
+}
+
+strong, b { font-weight: var(--font-weight-bold); }
+em, i     { font-style: italic; }
+
+small { font-size: var(--text-sm); }
+
+/* ------------------------------------------------------------------
+   Lists
+------------------------------------------------------------------ */
+ul, ol {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+}
+
+li {
+    margin-bottom: var(--space-2);
+}
+
+/* ------------------------------------------------------------------
+   Blockquote
+------------------------------------------------------------------ */
+blockquote {
+    border-left: 4px solid var(--color-primary);
+    margin:      var(--space-8) 0;
+    padding:     var(--space-4) var(--space-6);
+    background:  var(--color-bg-alt);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-size:   var(--text-lg);
+    font-style:  italic;
+    color:       var(--color-gray-700);
+}
+
+blockquote cite {
+    display:     block;
+    margin-top:  var(--space-3);
+    font-size:   var(--text-sm);
+    font-style:  normal;
+    color:       var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------------
+   Code
+------------------------------------------------------------------ */
+code, kbd, samp, pre {
+    font-family: var(--font-mono);
+    font-size:   0.9em;
+}
+
+code {
+    background:    var(--color-gray-100);
+    padding:       0.1em 0.4em;
+    border-radius: var(--radius-sm);
+    color:         var(--color-secondary-dark);
+}
+
+pre {
+    background:    var(--color-gray-900);
+    color:         var(--color-gray-100);
+    padding:       var(--space-6);
+    border-radius: var(--radius-md);
+    overflow-x:    auto;
+    margin-bottom: var(--space-6);
+}
+
+pre code {
+    background: transparent;
+    padding:    0;
+    color:      inherit;
+}
+
+/* ------------------------------------------------------------------
+   Horizontal rule
+------------------------------------------------------------------ */
+hr {
+    border: none;
+    border-top: var(--border-width) solid var(--color-border);
+    margin: var(--space-8) 0;
+}
+
+/* ------------------------------------------------------------------
+   Responsive type scale
+------------------------------------------------------------------ */
+@media (max-width: 768px) {
+    h1 { font-size: var(--text-3xl); }
+    h2 { font-size: var(--text-2xl); }
+    h3 { font-size: var(--text-xl);  }
+}

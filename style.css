@@ -1,0 +1,18 @@
+/*
+Theme Name:        Goldenpine Theme
+Theme URI:         https://goldenpine.com
+Author:            TGN Digital
+Author URI:        https://tgndigital.vn/
+Description:       A custom WordPress theme for Goldenpine — modular, scalable, and built for long-term maintainability.
+Version:           1.0.0
+Requires at least: 6.0
+Tested up to:      6.5
+Requires PHP:      8.0
+Text Domain:       goldenpine-theme
+Tags:              custom-theme, responsive, accessibility-ready
+
+/*--------------------------------------------------------------
+  NOTE: This file contains only the theme header required by
+  WordPress to recognise this as a theme. All actual CSS lives
+  inside assets/css/ and is enqueued via inc/enqueue.php.
+--------------------------------------------------------------*/

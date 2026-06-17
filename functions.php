@@ -1,0 +1,64 @@
+<?php
+/**
+ * Goldenpine Theme — functions.php
+ *
+ * Entry point for all theme includes. Keep this file lean: it only
+ * requires individual files from inc/ so that each concern is isolated
+ * and easy to find, edit, or swap without touching anything else.
+ *
+ * Load order:
+ *  1. Setup     — theme supports, image sizes, nav menus
+ *  2. Enqueue   — scripts and styles
+ *  3. Helpers   — reusable utility functions
+ *  4. Admin     — dashboard-only customisations
+ *  5. Post Types & Taxonomies — custom content types
+ *  6. Customizer — Customizer panels, sections, settings
+ *  7. AJAX      — front-end AJAX handlers
+ *  8. Integrations — third-party plugin hooks
+ *
+ * @package GoldenpineTheme
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// Define theme constants for convenience.
+// ---------------------------------------------------------------------------
+define( 'GOLDENPINE_VERSION', '1.0.0' );
+define( 'GOLDENPINE_DIR',     get_template_directory() );
+define( 'GOLDENPINE_URI',     get_template_directory_uri() );
+
+/**
+ * Safely require a file and throw a descriptive error if missing.
+ *
+ * @param string $relative_path Path relative to the theme root.
+ */
+function goldenpine_require( string $relative_path ): void {
+    $absolute = GOLDENPINE_DIR . '/' . ltrim( $relative_path, '/' );
+    if ( file_exists( $absolute ) ) {
+        require_once $absolute;
+    } else {
+        /* translators: %s: file path */
+        wp_die( sprintf( esc_html__( 'Goldenpine Theme: required file not found — %s', 'goldenpine-theme' ), esc_html( $absolute ) ) );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 1. Core setup.
+// ---------------------------------------------------------------------------
+goldenpine_require( 'inc/setup.php' );
+goldenpine_require( 'inc/enqueue.php' );
+
+// ---------------------------------------------------------------------------
+// 2. Admin (back-end only).
+// ---------------------------------------------------------------------------
+if ( is_admin() ) {
+    goldenpine_require( 'inc/admin/admin-settings.php' );
+}
+
+// ---------------------------------------------------------------------------
+// 3. Customizer.
+// ---------------------------------------------------------------------------
+goldenpine_require( 'inc/customizer/customizer-setup.php' );

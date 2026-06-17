@@ -1,0 +1,159 @@
+/**
+ * CSS Custom Properties — Design Tokens
+ *
+ * All raw design decisions (colours, spacing, typography scale, shadows,
+ * radii, z-index, transitions) live here as CSS variables so that every
+ * other stylesheet can reference them. Changing a value here propagates
+ * throughout the entire theme.
+ *
+ * Usage: var(--color-primary)
+ *
+ * @package GoldenpineTheme
+ */
+
+:root {
+
+    /* ------------------------------------------------------------------
+       Colour palette
+    ------------------------------------------------------------------ */
+    --color-primary:        #c8860a;
+    --color-primary-light:  #e6a52a;
+    --color-primary-dark:   #9a6408;
+
+    --color-secondary:      #2c3e50;
+    --color-secondary-light:#3d5166;
+    --color-secondary-dark: #1a252f;
+
+    --color-accent:         #f0c040;
+
+    /* Neutrals */
+    --color-white:          #ffffff;
+    --color-off-white:      #f8f8f5;
+    --color-gray-100:       #f4f4f4;
+    --color-gray-200:       #e8e8e8;
+    --color-gray-300:       #d0d0d0;
+    --color-gray-400:       #aaaaaa;
+    --color-gray-500:       #888888;
+    --color-gray-600:       #666666;
+    --color-gray-700:       #444444;
+    --color-gray-800:       #2a2a2a;
+    --color-gray-900:       #111111;
+    --color-black:          #000000;
+
+    /* Semantic */
+    --color-text:           var(--color-gray-800);
+    --color-text-muted:     var(--color-gray-500);
+    --color-heading:        var(--color-secondary-dark);
+    --color-link:           var(--color-primary);
+    --color-link-hover:     var(--color-primary-dark);
+    --color-border:         var(--color-gray-200);
+    --color-bg:             var(--color-white);
+    --color-bg-alt:         var(--color-off-white);
+
+    /* Status */
+    --color-success:        #2e7d32;
+    --color-warning:        #e65100;
+    --color-error:          #c62828;
+    --color-info:           #01579b;
+
+    /* ------------------------------------------------------------------
+       Typography
+    ------------------------------------------------------------------ */
+    --font-sans:            'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif:           'Playfair Display', Georgia, serif;
+    --font-mono:            'JetBrains Mono', 'Courier New', monospace;
+
+    --font-weight-regular:  400;
+    --font-weight-medium:   500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+    --font-weight-extrabold:800;
+
+    /* Type scale (fluid where possible) */
+    --text-xs:   0.75rem;   /*  12px */
+    --text-sm:   0.875rem;  /*  14px */
+    --text-base: 1rem;      /*  16px */
+    --text-md:   1.125rem;  /*  18px */
+    --text-lg:   1.25rem;   /*  20px */
+    --text-xl:   1.5rem;    /*  24px */
+    --text-2xl:  1.875rem;  /*  30px */
+    --text-3xl:  2.25rem;   /*  36px */
+    --text-4xl:  3rem;      /*  48px */
+    --text-5xl:  3.75rem;   /*  60px */
+
+    --line-height-tight:    1.2;
+    --line-height-snug:     1.375;
+    --line-height-normal:   1.6;
+    --line-height-relaxed:  1.8;
+
+    /* ------------------------------------------------------------------
+       Spacing scale (multiples of 4 px)
+    ------------------------------------------------------------------ */
+    --space-1:  0.25rem;   /*  4px */
+    --space-2:  0.5rem;    /*  8px */
+    --space-3:  0.75rem;   /* 12px */
+    --space-4:  1rem;      /* 16px */
+    --space-5:  1.25rem;   /* 20px */
+    --space-6:  1.5rem;    /* 24px */
+    --space-8:  2rem;      /* 32px */
+    --space-10: 2.5rem;    /* 40px */
+    --space-12: 3rem;      /* 48px */
+    --space-16: 4rem;      /* 64px */
+    --space-20: 5rem;      /* 80px */
+    --space-24: 6rem;      /* 96px */
+    --space-32: 8rem;      /* 128px */
+
+    /* ------------------------------------------------------------------
+       Layout
+    ------------------------------------------------------------------ */
+    --container-sm:         640px;
+    --container-md:         768px;
+    --container-lg:         1024px;
+    --container-xl:         1280px;
+    --container-2xl:        1440px;
+    --container-padding:    var(--space-6);
+
+    /* ------------------------------------------------------------------
+       Borders & Radii
+    ------------------------------------------------------------------ */
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   16px;
+    --radius-xl:   24px;
+    --radius-full: 9999px;
+
+    --border-width: 1px;
+    --border-color: var(--color-border);
+
+    /* ------------------------------------------------------------------
+       Shadows
+    ------------------------------------------------------------------ */
+    --shadow-sm:  0 1px 3px rgba(0,0,0,.08);
+    --shadow-md:  0 4px 12px rgba(0,0,0,.10);
+    --shadow-lg:  0 8px 24px rgba(0,0,0,.12);
+    --shadow-xl:  0 16px 48px rgba(0,0,0,.15);
+
+    /* ------------------------------------------------------------------
+       Transitions
+    ------------------------------------------------------------------ */
+    --transition-fast:   150ms ease;
+    --transition-base:   250ms ease;
+    --transition-slow:   400ms ease;
+
+    /* ------------------------------------------------------------------
+       Z-index scale
+    ------------------------------------------------------------------ */
+    --z-below:      -1;
+    --z-base:        0;
+    --z-dropdown:  100;
+    --z-sticky:    200;
+    --z-overlay:   300;
+    --z-modal:     400;
+    --z-toast:     500;
+
+    /* ------------------------------------------------------------------
+       Header
+    ------------------------------------------------------------------ */
+    --header-height:        72px;
+    --header-height-mobile: 60px;
+}
