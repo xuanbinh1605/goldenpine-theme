@@ -38,6 +38,7 @@ window.goldenpineNavigation = ( function () {
     // Open / close helpers
     // ------------------------------------------------------------------
     function open() {
+        nav.classList.remove( 'hidden' );
         nav.classList.add( 'is-open' );
         toggle.setAttribute( 'aria-expanded', 'true' );
         document.body.classList.add( 'nav-open' );
@@ -45,6 +46,7 @@ window.goldenpineNavigation = ( function () {
     }
 
     function close() {
+        nav.classList.add( 'hidden' );
         nav.classList.remove( 'is-open' );
         toggle.setAttribute( 'aria-expanded', 'false' );
         document.body.classList.remove( 'nav-open' );

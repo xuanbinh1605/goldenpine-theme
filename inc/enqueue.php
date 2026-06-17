@@ -39,6 +39,7 @@ function goldenpine_enqueue_assets(): void {
     // 3. Layout
     wp_enqueue_style( 'goldenpine-grid',       $uri . '/assets/css/layout/_grid.css',       [ 'goldenpine-variables' ], $ver );
     wp_enqueue_style( 'goldenpine-header-css', $uri . '/assets/css/layout/_header.css',     [ 'goldenpine-variables' ], $ver );
+
     wp_enqueue_style( 'goldenpine-footer-css', $uri . '/assets/css/layout/_footer.css',     [ 'goldenpine-variables' ], $ver );
     wp_enqueue_style( 'goldenpine-nav-css',    $uri . '/assets/css/layout/_navigation.css', [ 'goldenpine-variables' ], $ver );
     wp_enqueue_style( 'goldenpine-sidebar',    $uri . '/assets/css/layout/_sidebar.css',    [ 'goldenpine-variables' ], $ver );
