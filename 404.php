@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main page-404">
+<main id="primary" class="site-main page-404 min-h-screen bg-background">
     <div class="container">
         <section class="error-404">
             <header class="page-header">

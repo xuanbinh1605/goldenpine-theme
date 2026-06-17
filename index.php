@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 ?>
 
-<main id="primary" class="site-main">
+<main id="primary" class="site-main min-h-screen bg-background">
     <div class="container">
 
         <?php if ( have_posts() ) : ?>

@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class( 'font-sans antialiased bg-background text-foreground' ); ?>>
 
 <?php wp_body_open(); ?>
 
