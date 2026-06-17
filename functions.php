@@ -62,6 +62,7 @@ if ( is_admin() ) {
 // 3. Post Types & Meta Boxes.
 // ---------------------------------------------------------------------------
 goldenpine_require( 'inc/post-types/video.php' );
+goldenpine_require( 'inc/post-types/marquee.php' );
 goldenpine_require( 'inc/meta-boxes/video-gallery.php' );
 
 // ---------------------------------------------------------------------------

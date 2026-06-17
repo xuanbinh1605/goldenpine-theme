@@ -91,21 +91,28 @@ if ( empty( $_gpine_hero_videos ) ) {
 }
 
 // ---------------------------------------------------------------------------
-// Ticker items — filterable for easy customisation.
+// Ticker items — fetch from Marquee CPT or hide if none exist.
 // ---------------------------------------------------------------------------
-$_gpine_ticker_items = apply_filters(
-    'goldenpine_hero_ticker_items',
-    [
-        esc_html__( 'Premium Cocktails',    'goldenpine-theme' ),
-        esc_html__( 'Live DJ Sets',         'goldenpine-theme' ),
-        esc_html__( 'Bottle Service',       'goldenpine-theme' ),
-        esc_html__( 'Nightlife Da Nang',    'goldenpine-theme' ),
-        esc_html__( 'Golden Pine Pub',      'goldenpine-theme' ),
-        esc_html__( 'Private Events',       'goldenpine-theme' ),
-        esc_html__( 'International Crowd',  'goldenpine-theme' ),
-        esc_html__( 'Open 5PM \u2013 Late', 'goldenpine-theme' ),
-    ]
-);
+$_gpine_ticker_items = [];
+
+if ( post_type_exists( 'gpine_marquee' ) ) {
+    $_gpine_marquee_posts = get_posts(
+        [
+            'post_type'      => 'gpine_marquee',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ]
+    );
+
+    if ( ! empty( $_gpine_marquee_posts ) ) {
+        $_gpine_ticker_items = array_map(
+            fn( $post ) => get_the_title( $post ),
+            $_gpine_marquee_posts
+        );
+    }
+}
 
 $_gpine_video_count = count( $_gpine_hero_videos );
 ?>
