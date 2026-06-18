@@ -59,11 +59,16 @@ if ( is_admin() ) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Post Types & Meta Boxes.
+// 3. Post Types, Taxonomies & Meta Boxes.
 // ---------------------------------------------------------------------------
 goldenpine_require( 'inc/post-types/video.php' );
 goldenpine_require( 'inc/post-types/marquee.php' );
 goldenpine_require( 'inc/meta-boxes/video-gallery.php' );
+
+goldenpine_require( 'inc/post-types/event.php' );
+goldenpine_require( 'inc/taxonomies/event-type.php' );
+goldenpine_require( 'inc/taxonomies/event-tag.php' );
+goldenpine_require( 'inc/meta-boxes/event-meta.php' );
 
 // ---------------------------------------------------------------------------
 // 4. Customizer.

@@ -1,0 +1,189 @@
+/**
+ * Goldenpine Theme — assets/css/admin/_event-meta-admin.css
+ *
+ * Styles for the Event Details meta box on the event CPT edit screen.
+ * Covers section layout, form table overrides, time inputs, and gallery grid.
+ *
+ * @package GoldenpineTheme
+ */
+
+/* ---------------------------------------------------------------------------
+   Meta box wrapper
+--------------------------------------------------------------------------- */
+.gpine-event-meta {
+    padding: 4px 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Sections
+--------------------------------------------------------------------------- */
+.gpine-event-meta__section {
+    padding: 20px 0;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.gpine-event-meta__section:last-child {
+    border-bottom: none;
+    padding-bottom: 4px;
+}
+
+.gpine-event-meta__section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1d2327;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f1;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.gpine-event-meta__section-desc {
+    margin: -6px 0 14px;
+    color: #646970;
+}
+
+/* ---------------------------------------------------------------------------
+   Form table
+--------------------------------------------------------------------------- */
+.gpine-event-meta__table {
+    margin-top: 0;
+}
+
+.gpine-event-meta__table th {
+    width: 160px;
+    padding: 10px 10px 10px 0;
+}
+
+.gpine-event-meta__table td {
+    padding: 10px 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Time picker pair
+--------------------------------------------------------------------------- */
+.gpine-event-meta__time-label {
+    display: inline-block;
+    margin-right: 4px;
+    font-weight: 600;
+    color: #50575e;
+    min-width: 36px;
+    vertical-align: middle;
+}
+
+.gpine-event-meta__time-input {
+    margin-right: 16px;
+    vertical-align: middle;
+}
+
+/* ---------------------------------------------------------------------------
+   Help / empty-state text
+--------------------------------------------------------------------------- */
+.gpine-event-meta__help,
+.gpine-event-meta__empty {
+    color: #646970;
+    font-style: italic;
+    margin: 0 0 10px;
+}
+
+/* ---------------------------------------------------------------------------
+   Gallery grid
+--------------------------------------------------------------------------- */
+.gpine-gallery-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 0;
+    list-style: none;
+}
+
+.gpine-gallery-item {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    border: 2px solid #dcdcde;
+    border-radius: 4px;
+    background: #f6f7f7;
+    overflow: hidden;
+    cursor: default;
+    transition: border-color 0.15s;
+}
+
+.gpine-gallery-item:hover {
+    border-color: #2271b1;
+}
+
+.gpine-gallery-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Drag handle — top-left corner, visible on hover */
+.gpine-gallery-handle {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    color: #fff;
+    background: rgba( 0, 0, 0, 0.55 );
+    border-radius: 3px;
+    padding: 2px;
+    cursor: grab;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.gpine-gallery-item:hover .gpine-gallery-handle {
+    opacity: 1;
+}
+
+/* Remove button — top-right corner, visible on hover */
+.gpine-gallery-remove {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: rgba( 0, 0, 0, 0.55 );
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    padding: 2px;
+    cursor: pointer;
+    font-size: 0;
+    line-height: 0;
+    opacity: 0;
+    transition: opacity 0.15s, background-color 0.15s;
+}
+
+.gpine-gallery-remove:hover {
+    background: #d63638;
+    opacity: 1;
+}
+
+.gpine-gallery-item:hover .gpine-gallery-remove {
+    opacity: 1;
+}
+
+.gpine-gallery-remove .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 1;
+}
+
+/* Sortable placeholder */
+.gpine-gallery-item.ui-sortable-placeholder {
+    background: #f0f0f1;
+    border: 2px dashed #c3c4c7;
+    visibility: visible !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Add button
+--------------------------------------------------------------------------- */
+.gpine-event-meta__add-btn {
+    margin-top: 4px;
+}
