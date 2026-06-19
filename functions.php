@@ -78,3 +78,4 @@ goldenpine_require( 'inc/customizer/customizer-the-space.php' );
 goldenpine_require( 'inc/customizer/customizer-reservation.php' );
 goldenpine_require( 'inc/customizer/customizer-events.php' );
 goldenpine_require( 'inc/customizer/customizer-about-page.php' );
+goldenpine_require( 'inc/customizer/customizer-contact.php' );
