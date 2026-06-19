@@ -76,6 +76,27 @@ function goldenpine_register_event_cpt(): void {
 add_action( 'init', 'goldenpine_register_event_cpt' );
 
 // ---------------------------------------------------------------------------
+// Front-end archive: order events by event date ascending (soonest first).
+// Events without a date fall to the end via a secondary query in the template.
+// ---------------------------------------------------------------------------
+function goldenpine_event_archive_order( WP_Query $query ): void {
+
+    if ( is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+
+    if ( ! $query->is_post_type_archive( 'event' ) ) {
+        return;
+    }
+
+    $query->set( 'meta_key', '_gpine_event_date' );
+    $query->set( 'orderby',  'meta_value' );
+    $query->set( 'order',    'ASC' );
+    $query->set( 'posts_per_page', -1 );
+}
+add_action( 'pre_get_posts', 'goldenpine_event_archive_order' );
+
+// ---------------------------------------------------------------------------
 // Customize admin columns — show event date for easy reference.
 // ---------------------------------------------------------------------------
 function goldenpine_event_admin_columns( array $columns ): array {

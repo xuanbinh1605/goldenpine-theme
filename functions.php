@@ -76,3 +76,4 @@ goldenpine_require( 'inc/customizer/customizer-setup.php' );
 goldenpine_require( 'inc/customizer/customizer-about.php' );
 goldenpine_require( 'inc/customizer/customizer-the-space.php' );
 goldenpine_require( 'inc/customizer/customizer-reservation.php' );
+goldenpine_require( 'inc/customizer/customizer-events.php' );
