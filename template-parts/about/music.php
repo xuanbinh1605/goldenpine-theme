@@ -58,7 +58,7 @@ $cta_phone   = get_theme_mod( 'goldenpine_footer_phone', '' );
 		<div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end mb-12 md:mb-16">
 			<h2
 				class="md:col-span-8 font-black uppercase text-foreground leading-[0.92] tracking-tight text-balance"
-				style="font-size: clamp(2.8rem, 7vw, 7rem);"
+				style="font-size: clamp(2rem, 7vw, 7rem);"
 			>
 				<?php echo esc_html( $heading1 ); ?><br>
 				<span class="text-gold"><?php echo esc_html( $heading2 ); ?></span>

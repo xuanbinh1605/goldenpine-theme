@@ -54,7 +54,7 @@ $_gpine_about_cta_link    = get_theme_mod( 'goldenpine_about_cta_link', '/about'
 
         <!-- Main Heading -->
         <h2 class="font-black uppercase text-foreground leading-[0.92] tracking-tight text-balance mb-12 md:mb-16" 
-            style="font-size: clamp(2.8rem, 7vw, 7rem);">
+            style="font-size: clamp(2rem, 7vw, 7rem);">
             <?php echo esc_html( $_gpine_about_heading_1 ); ?><br>
             <span class="text-gold"><?php echo esc_html( $_gpine_about_heading_2 ); ?></span>
         </h2>

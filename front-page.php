@@ -26,6 +26,7 @@ get_header();
 <main id="primary" class="site-main page-front-page min-h-screen bg-background">
 
     <?php get_template_part( 'template-parts/front-page/hero' ); ?>
+    <?php get_template_part( 'template-parts/front-page/events' ); ?>
     <?php get_template_part( 'template-parts/front-page/about' ); ?>
     <?php get_template_part( 'template-parts/front-page/the-space' ); ?>
     <?php get_template_part( 'template-parts/front-page/features' ); ?>

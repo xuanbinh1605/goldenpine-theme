@@ -63,7 +63,7 @@ $_gpine_card3_alt = $_gpine_card3_img_id ? get_post_meta( $_gpine_card3_img_id, 
         <!-- Heading + Description row -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end mb-14 md:mb-16">
             <h2 class="md:col-span-8 font-black uppercase text-foreground leading-[0.92] tracking-tight text-balance"
-                style="font-size: clamp(2.8rem, 7vw, 7rem);">
+                style="font-size: clamp(2rem, 7vw, 7rem);">
                 <?php echo esc_html( $_gpine_space_heading_1 ); ?><br>
                 <span class="text-gold"><?php echo esc_html( $_gpine_space_heading_2 ); ?></span>
             </h2>
@@ -155,7 +155,7 @@ $_gpine_card3_alt = $_gpine_card3_img_id ? get_post_meta( $_gpine_card3_img_id, 
             </div>
 
             <!-- Social buttons -->
-            <div class="flex items-center gap-3 shrink-0">
+            <div class="flex flex-col md:flex-row items-center gap-3 shrink-0">
 
                 <?php if ( $_gpine_space_instagram ) : ?>
                     <a
