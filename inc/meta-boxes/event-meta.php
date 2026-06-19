@@ -13,10 +13,9 @@
  *  _gpine_event_end_time            — End time, HH:MM 24-hour (time)
  *  _gpine_event_description         — Long-form rich-text description (html)
  *  _gpine_event_gallery             — Comma-separated attachment IDs (string)
+ *  _gpine_event_performer_image     — Performer image attachment ID (int)
  *  _gpine_event_performer           — Performer name (text)
  *  _gpine_event_dress_code          — Dress code requirement (text)
- *  _gpine_event_table_minimum       — Table minimum pricing (text)
- *  _gpine_event_age_limit           — Age restriction (text)
  *  _gpine_event_location_name       — Venue / location name (text)
  *  _gpine_event_location_description — Venue detail / door time note (textarea)
  *  _gpine_booking_phone             — Booking phone number (text)
@@ -108,10 +107,9 @@ function goldenpine_event_meta_render( WP_Post $post ): void {
     $end_time             = (string) get_post_meta( $post->ID, '_gpine_event_end_time',             true );
     $description          = (string) get_post_meta( $post->ID, '_gpine_event_description',          true );
     $gallery_ids_raw      = (string) get_post_meta( $post->ID, '_gpine_event_gallery',             true );
+    $performer_image_id   = (int)    get_post_meta( $post->ID, '_gpine_event_performer_image',      true );
     $performer            = (string) get_post_meta( $post->ID, '_gpine_event_performer',            true );
     $dress_code           = (string) get_post_meta( $post->ID, '_gpine_event_dress_code',           true );
-    $table_minimum        = (string) get_post_meta( $post->ID, '_gpine_event_table_minimum',        true );
-    $age_limit            = (string) get_post_meta( $post->ID, '_gpine_event_age_limit',            true );
     $location_name        = (string) get_post_meta( $post->ID, '_gpine_event_location_name',        true );
     $location_description = (string) get_post_meta( $post->ID, '_gpine_event_location_description', true );
     $booking_phone        = (string) get_post_meta( $post->ID, '_gpine_booking_phone',              true );
@@ -314,6 +312,47 @@ function goldenpine_event_meta_render( WP_Post $post ): void {
             <table class="form-table gpine-event-meta__table">
                 <tbody>
 
+                    <!-- Performer Image -->
+                    <tr>
+                        <th scope="row">
+                            <label for="gpine_event_performer_image">
+                                <?php esc_html_e( 'Performer Image', 'goldenpine-theme' ); ?>
+                            </label>
+                        </th>
+                        <td>
+                            <div class="gpine-performer-image-wrap">
+                                <?php
+                                $performer_image_url = '';
+                                if ( $performer_image_id ) {
+                                    $performer_image_url = wp_get_attachment_image_url( $performer_image_id, 'medium' );
+                                }
+                                ?>
+                                <div class="gpine-performer-image-preview" style="margin-bottom: 10px;">
+                                    <?php if ( $performer_image_url ) : ?>
+                                        <img src="<?php echo esc_url( $performer_image_url ); ?>" alt="" style="max-width: 200px; height: auto; display: block; border-radius: 8px;">
+                                    <?php endif; ?>
+                                </div>
+                                <input
+                                    type="hidden"
+                                    id="gpine_event_performer_image"
+                                    name="_gpine_event_performer_image"
+                                    value="<?php echo esc_attr( $performer_image_id ); ?>"
+                                >
+                                <button type="button" class="button gpine-upload-performer-image">
+                                    <?php echo $performer_image_id ? esc_html__( 'Change Image', 'goldenpine-theme' ) : esc_html__( 'Select Image', 'goldenpine-theme' ); ?>
+                                </button>
+                                <?php if ( $performer_image_id ) : ?>
+                                    <button type="button" class="button gpine-remove-performer-image" style="margin-left: 5px;">
+                                        <?php esc_html_e( 'Remove', 'goldenpine-theme' ); ?>
+                                    </button>
+                                <?php endif; ?>
+                                <p class="description">
+                                    <?php esc_html_e( 'Upload or select a performer photo. Recommended size: 400x400px or larger.', 'goldenpine-theme' ); ?>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
                     <!-- Performer -->
                     <tr>
                         <th scope="row">
@@ -348,44 +387,6 @@ function goldenpine_event_meta_render( WP_Post $post ): void {
                                 value="<?php echo esc_attr( $dress_code ); ?>"
                                 class="large-text"
                                 placeholder="<?php esc_attr_e( 'e.g. Smart Casual — No Flip-Flops', 'goldenpine-theme' ); ?>"
-                            >
-                        </td>
-                    </tr>
-
-                    <!-- Table Minimum -->
-                    <tr>
-                        <th scope="row">
-                            <label for="gpine_event_table_minimum">
-                                <?php esc_html_e( 'Table Minimum', 'goldenpine-theme' ); ?>
-                            </label>
-                        </th>
-                        <td>
-                            <input
-                                type="text"
-                                id="gpine_event_table_minimum"
-                                name="_gpine_event_table_minimum"
-                                value="<?php echo esc_attr( $table_minimum ); ?>"
-                                class="large-text"
-                                placeholder="<?php esc_attr_e( 'e.g. From 2,000,000 VND / table', 'goldenpine-theme' ); ?>"
-                            >
-                        </td>
-                    </tr>
-
-                    <!-- Age Limit -->
-                    <tr>
-                        <th scope="row">
-                            <label for="gpine_event_age_limit">
-                                <?php esc_html_e( 'Age Limit', 'goldenpine-theme' ); ?>
-                            </label>
-                        </th>
-                        <td>
-                            <input
-                                type="text"
-                                id="gpine_event_age_limit"
-                                name="_gpine_event_age_limit"
-                                value="<?php echo esc_attr( $age_limit ); ?>"
-                                class="small-text"
-                                placeholder="<?php esc_attr_e( 'e.g. 18+', 'goldenpine-theme' ); ?>"
                             >
                         </td>
                     </tr>
@@ -564,13 +565,19 @@ function goldenpine_save_event_meta( int $post_id ): void {
     }
 
     // -----------------------------------------------------------------------
-    // Section 4: Event Essentials — all plain text.
+    // Section 4: Event Essentials.
     // -----------------------------------------------------------------------
+    
+    // Performer Image — validate as attachment ID.
+    if ( isset( $_POST['_gpine_event_performer_image'] ) ) {
+        $performer_image_id = absint( $_POST['_gpine_event_performer_image'] );
+        update_post_meta( $post_id, '_gpine_event_performer_image', $performer_image_id );
+    }
+    
+    // Text fields.
     $text_fields = [
         '_gpine_event_performer',
         '_gpine_event_dress_code',
-        '_gpine_event_table_minimum',
-        '_gpine_event_age_limit',
         '_gpine_event_location_name',
     ];
 
