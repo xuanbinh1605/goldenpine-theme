@@ -161,13 +161,38 @@ function goldenpine_enqueue_assets(): void {
             true
         );
 
+        // Collect upcoming event dates to highlight in the date picker.
+        $event_dates_raw = [];
+        $events_q = new WP_Query( [
+            'post_type'      => 'event',
+            'post_status'    => 'publish',
+            'nopaging'       => true,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'     => '_gpine_event_date',
+                    'value'   => gmdate( 'Y-m-d' ),
+                    'compare' => '>=',
+                    'type'    => 'DATE',
+                ],
+            ],
+        ] );
+        foreach ( $events_q->posts as $eid ) {
+            $d = get_post_meta( $eid, '_gpine_event_date', true );
+            if ( $d ) {
+                $event_dates_raw[] = $d;
+            }
+        }
+        wp_reset_postdata();
+
         wp_localize_script(
             'goldenpine-booking-page',
             'gpineBooking',
             [
-                'ajaxUrl' => esc_url( admin_url( 'admin-ajax.php' ) ),
-                'nonce'   => wp_create_nonce( 'gpine_booking_nonce' ),
-                'i18n'    => [
+                'ajaxUrl'    => esc_url( admin_url( 'admin-ajax.php' ) ),
+                'nonce'      => wp_create_nonce( 'gpine_booking_nonce' ),
+                'eventDates' => array_values( array_unique( $event_dates_raw ) ),
+                'i18n'       => [
                     'success'     => esc_html__( "Your table request has been submitted! We\u2019ll confirm within the hour via phone or WhatsApp.", 'goldenpine-theme' ),
                     'error'       => esc_html__( 'Something went wrong. Please try again or contact us directly.', 'goldenpine-theme' ),
                     'validName'   => esc_html__( 'Please enter your full name (at least 2 characters).', 'goldenpine-theme' ),

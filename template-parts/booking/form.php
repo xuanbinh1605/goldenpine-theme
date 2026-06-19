@@ -41,8 +41,8 @@ for ( $i = 1; $i <= 4; $i++ ) {
 	$gallery_images[] = $img_url;
 }
 
-// Time options available for reservation.
-$time_options = [ '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM' ];
+// Time options available for reservation (9 PM to 2 AM).
+$time_options = [ '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM' ];
 
 // Guest count options.
 $guest_options = [
@@ -104,11 +104,12 @@ $min_date = gmdate( 'Y-m-d' );
 			<!-- ================================================================
 			     BOOKING FORM
 			     ================================================================ -->
-			<form
-				id="gpine-booking-form"
-				class="rounded-3xl border border-border bg-card p-6 md:p-10 flex flex-col gap-5"
-				novalidate
-			>
+		<form
+			id="gpine-booking-form"
+			class="rounded-3xl border p-6 md:p-10 flex flex-col gap-5"
+			style="border-color:rgba(226,190,61,0.22); background-color: #4f4b4b;"
+			novalidate
+		>
 				<?php wp_nonce_field( 'gpine_booking_nonce', 'gpine_booking_nonce_field' ); ?>
 				<input type="hidden" name="action" value="gpine_submit_booking">
 
@@ -180,28 +181,26 @@ $min_date = gmdate( 'Y-m-d' );
 							<?php esc_html_e( 'Date', 'goldenpine-theme' ); ?>
 							<span class="text-gold" aria-hidden="true">*</span>
 						</label>
-						<div class="relative">
-							<!-- Visible styled button -->
-							<button
-								type="button"
-								id="booking_date_btn"
-								class="w-full bg-background border border-border rounded-2xl px-5 py-4 text-base text-foreground hover:border-gold transition-colors flex items-center justify-between"
-								aria-controls="booking_date"
-							>
-								<span id="booking_date_display" class="text-foreground/50"><?php esc_html_e( 'Select date', 'goldenpine-theme' ); ?></span>
-								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gold shrink-0" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg>
-							</button>
-							<!-- Hidden native date input -->
-							<input
-								type="date"
-								id="booking_date"
-								name="booking_date"
-								required
-								min="<?php echo esc_attr( $min_date ); ?>"
-								class="booking-field absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-								aria-label="<?php esc_attr_e( 'Select reservation date', 'goldenpine-theme' ); ?>"
-							>
-						</div>
+					<!-- Anchor for the custom JS calendar popup -->
+					<div class="relative" id="gpine-datepicker-anchor">
+						<button
+							type="button"
+							id="booking_date_btn"
+							class="w-full bg-background border border-border rounded-2xl px-5 py-4 text-base text-foreground hover:border-gold transition-colors flex items-center justify-between"
+							aria-haspopup="true"
+							aria-expanded="false"
+						>
+							<span id="booking_date_display" class="text-foreground/50"><?php esc_html_e( 'Select date', 'goldenpine-theme' ); ?></span>
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gold shrink-0" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg>
+						</button>
+						<!-- Value is set programmatically by the custom calendar picker -->
+						<input
+							type="hidden"
+							id="booking_date"
+							name="booking_date"
+							class="booking-field"
+						>
+					</div>
 						<p class="field-error text-xs text-red-400 hidden" aria-live="polite"></p>
 					</div>
 

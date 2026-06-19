@@ -93,25 +93,62 @@ function goldenpine_email_template( string $content, string $heading = '' ): str
 }
 
 // ============================================================================
-// 2. Admin Notification Email
+// 2. Shared email headers builder
 // ============================================================================
 
 /**
- * Send a notification email to the site administrator with full booking details.
+ * Build the standard wp_mail headers array used by all booking emails.
+ * Putting Content-Type directly in the headers array is more reliable than
+ * using the wp_mail_content_type filter, which can be missed if another
+ * plugin removes it or if an exception short-circuits the filter removal.
+ *
+ * @param string $reply_to Optional Reply-To address.
+ * @return string[]
+ */
+function goldenpine_booking_mail_headers( string $reply_to = '' ): array {
+	$site_name = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
+	$from      = sanitize_email( get_option( 'admin_email' ) );
+
+	$headers = [
+		'Content-Type: text/html; charset=UTF-8',
+		'From: ' . $site_name . ' <' . $from . '>',
+	];
+
+	if ( $reply_to && is_email( $reply_to ) ) {
+		$headers[] = 'Reply-To: ' . sanitize_email( $reply_to );
+	}
+
+	return $headers;
+}
+
+// ============================================================================
+// 3. Admin Notification Email
+// ============================================================================
+
+/**
+ * Send a notification email to the configured notification address with full
+ * booking details.
  *
  * @param array $data Booking data array (sanitised values).
- * @return bool True if email was sent successfully, false otherwise.
+ * @return bool True if wp_mail() accepted the message, false otherwise.
  */
 function goldenpine_send_admin_booking_email( array $data ): bool {
-	$admin_email = goldenpine_get_booking_notification_email();
-	$site_name   = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
-	$submitted   = isset( $data['submitted_at'] )
+	$to        = sanitize_email( goldenpine_get_booking_notification_email() );
+	$site_name = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
+
+	// Bail early if no valid destination.
+	if ( ! is_email( $to ) ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( '[Goldenpine] Admin booking email skipped — invalid to address: ' . $to );
+		return false;
+	}
+
+	$submitted = isset( $data['submitted_at'] )
 		? get_date_from_gmt( gmdate( 'Y-m-d H:i:s', (int) $data['submitted_at'] ), 'd M Y, H:i' )
 		: current_time( 'd M Y, H:i' );
 
 	$subject = sprintf(
-		/* translators: 1: reference ID  2: guest name */
-		__( '[%1$s] New Booking — %2$s (%3$s)', 'goldenpine-theme' ),
+		'[%1$s] New Booking — %2$s (%3$s)',
 		$site_name,
 		$data['name'] ?? '',
 		$data['ref'] ?? ''
@@ -140,50 +177,53 @@ function goldenpine_send_admin_booking_email( array $data ): bool {
   <a class="cta-btn" href="<?php echo esc_url( admin_url( 'edit.php?post_type=gpine_booking' ) ); ?>">View All Bookings</a>
 </p>
 	<?php
-	$inner = ob_get_clean();
+	$inner   = ob_get_clean();
+	$message = goldenpine_email_template( $inner, 'New Booking Received' );
+	$headers = goldenpine_booking_mail_headers();
 
-	$message = goldenpine_email_template( $inner, __( 'New Booking Received', 'goldenpine-theme' ) );
+	$sent = wp_mail( $to, $subject, $message, $headers );
 
-	add_filter( 'wp_mail_content_type', 'goldenpine_mail_html_content_type' );
-	$sent = wp_mail( $admin_email, $subject, $message );
-	remove_filter( 'wp_mail_content_type', 'goldenpine_mail_html_content_type' );
+	if ( ! $sent ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( '[Goldenpine] Admin booking email FAILED to: ' . $to . ' | Ref: ' . ( $data['ref'] ?? '' ) );
+	}
 
 	return $sent;
 }
 
 // ============================================================================
-// 3. Customer Confirmation Email
+// 4. Customer Confirmation Email
 // ============================================================================
 
 /**
- * Send a confirmation email to the customer (only if they provided an email).
+ * Send a confirmation email to the customer.
+ * Only runs when $data['email'] is provided and valid.
  *
  * @param array $data Booking data array (sanitised values).
- * @return bool True if email was sent, false if no email address or send failed.
+ * @return bool True if sent, false if no email or send failed.
  */
 function goldenpine_send_customer_booking_email( array $data ): bool {
-	if ( empty( $data['email'] ) ) {
+	$to = sanitize_email( $data['email'] ?? '' );
+
+	if ( ! is_email( $to ) ) {
 		return false;
 	}
 
-	$site_name  = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
-	$admin_mail = get_option( 'admin_email' );
-	$phone      = get_theme_mod( 'goldenpine_footer_phone', '+84 905 123 456' );
-	$phone_raw  = preg_replace( '/[^+\d]/', '', $phone );
+	$site_name = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
+	$phone     = get_theme_mod( 'goldenpine_footer_phone', '+84 905 123 456' );
+	$phone_raw = preg_replace( '/[^+\d]/', '', $phone );
 
 	$subject = sprintf(
-		/* translators: 1: site name  2: reference ID */
-		__( '[%1$s] Booking Confirmation — %2$s', 'goldenpine-theme' ),
+		'[%1$s] Booking Confirmation — %2$s',
 		$site_name,
 		$data['ref'] ?? ''
 	);
 
 	ob_start();
 	?>
-<p style="font-size:16px;color:#e8e4da;line-height:1.7;margin:16px 0 24px;">
+<p style="font-size:16px;color:#000;line-height:1.7;margin:16px 0 24px;">
   <?php
   printf(
-	  /* translators: guest first name */
 	  esc_html__( 'Hi %s,', 'goldenpine-theme' ),
 	  esc_html( explode( ' ', trim( $data['name'] ?? 'there' ) )[0] )
   );
@@ -207,14 +247,15 @@ function goldenpine_send_customer_booking_email( array $data ): bool {
 </div>
 
 <div class="note-box" style="margin:16px 0;">
-  <strong style="color:#C9A84C;"><?php esc_html_e( 'What happens next?', 'goldenpine-theme' ); ?></strong><br>
+  <strong style="color:#000;"><?php esc_html_e( 'What happens next?', 'goldenpine-theme' ); ?></strong><br>
+  <span style="color:#000;">
   <?php
   printf(
-	  /* translators: phone number */
 	  esc_html__( 'Our team will call or WhatsApp %s to confirm your reservation. Please keep your phone handy. If you need to adjust or cancel, reply to this email or call us directly.', 'goldenpine-theme' ),
 	  esc_html( $data['phone'] ?? '' )
   );
   ?>
+  </span>
 </div>
 
 <p style="text-align:center;margin:28px 0 8px;">
@@ -228,31 +269,32 @@ function goldenpine_send_customer_booking_email( array $data ): bool {
   <strong style="color:#C9A84C;"><?php echo esc_html( $data['ref'] ?? '' ); ?></strong>
 </p>
 	<?php
-	$inner = ob_get_clean();
+	$inner   = ob_get_clean();
+	$message = goldenpine_email_template( $inner, 'Booking Received!' );
+	$headers = goldenpine_booking_mail_headers( sanitize_email( get_option( 'admin_email' ) ) );
 
-	$message = goldenpine_email_template( $inner, __( 'Booking Received!', 'goldenpine-theme' ) );
+	$sent = wp_mail( $to, $subject, $message, $headers );
 
-	$headers = [
-		'Reply-To: ' . sanitize_email( $admin_mail ),
-	];
-
-	add_filter( 'wp_mail_content_type', 'goldenpine_mail_html_content_type' );
-	$sent = wp_mail( sanitize_email( $data['email'] ), $subject, $message, $headers );
-	remove_filter( 'wp_mail_content_type', 'goldenpine_mail_html_content_type' );
+	if ( ! $sent ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( '[Goldenpine] Customer booking email FAILED to: ' . $to . ' | Ref: ' . ( $data['ref'] ?? '' ) );
+	}
 
 	return $sent;
 }
 
 // ============================================================================
-// 4. Helper: set email content type to HTML
+// 5. Log wp_mail failures with PHPMailer error detail
 // ============================================================================
 
 /**
- * Return 'text/html' for wp_mail calls.
- * Attached/removed per-send to avoid bleeding into other mail calls.
+ * Hook into wp_mail_failed to write the failure reason to the PHP error log.
+ * This fires whenever wp_mail() catches a PHPMailer exception.
  *
- * @return string
+ * @param \WP_Error $error The error returned by PHPMailer.
  */
-function goldenpine_mail_html_content_type(): string {
-	return 'text/html';
+function goldenpine_log_mail_failure( \WP_Error $error ): void {
+	// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+	error_log( '[Goldenpine] wp_mail_failed — ' . $error->get_error_message() );
 }
+add_action( 'wp_mail_failed', 'goldenpine_log_mail_failure' );

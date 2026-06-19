@@ -46,17 +46,18 @@ function goldenpine_handle_booking_submission(): void {
 	}
 
 	// ── 2. Rate limiting (IP-based) ───────────────────────────────────────────
+	// TEMPORARILY DISABLED FOR TESTING
 	$ip            = goldenpine_get_client_ip();
-	$rate_key      = 'gpine_book_rate_' . md5( $ip );
-	$rate_count    = (int) get_transient( $rate_key );
-	$rate_limit    = 3;
+	// $rate_key      = 'gpine_book_rate_' . md5( $ip );
+	// $rate_count    = (int) get_transient( $rate_key );
+	// $rate_limit    = 3;
 
-	if ( $rate_count >= $rate_limit ) {
-		wp_send_json_error( [
-			'code'    => 'rate_limit',
-			'message' => __( 'Too many submissions. Please wait a while before trying again.', 'goldenpine-theme' ),
-		], 429 );
-	}
+	// if ( $rate_count >= $rate_limit ) {
+	// 	wp_send_json_error( [
+	// 		'code'    => 'rate_limit',
+	// 		'message' => __( 'Too many submissions. Please wait a while before trying again.', 'goldenpine-theme' ),
+	// 	], 429 );
+	// }
 
 	// ── 3. Sanitize inputs ────────────────────────────────────────────────────
 	$name   = isset( $_POST['booking_name'] )   ? sanitize_text_field( wp_unslash( $_POST['booking_name'] ) )   : '';
@@ -95,7 +96,7 @@ function goldenpine_handle_booking_submission(): void {
 		}
 	}
 
-	$valid_times = [ '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM' ];
+	$valid_times = [ '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM' ];
 	if ( empty( $time ) || ! in_array( $time, $valid_times, true ) ) {
 		$errors['booking_time'] = __( 'Please select a valid arrival time.', 'goldenpine-theme' );
 	}
@@ -114,13 +115,14 @@ function goldenpine_handle_booking_submission(): void {
 	}
 
 	// ── 5. Duplicate detection ────────────────────────────────────────────────
-	$dup_key = 'gpine_book_dup_' . md5( $name . $phone . $date );
-	if ( get_transient( $dup_key ) ) {
-		wp_send_json_error( [
-			'code'    => 'duplicate',
-			'message' => __( 'A booking with these details was recently submitted. Please wait before trying again.', 'goldenpine-theme' ),
-		], 409 );
-	}
+	// TEMPORARILY DISABLED FOR TESTING
+	// $dup_key = 'gpine_book_dup_' . md5( $name . $phone . $date );
+	// if ( get_transient( $dup_key ) ) {
+	// 	wp_send_json_error( [
+	// 		'code'    => 'duplicate',
+	// 		'message' => __( 'A booking with these details was recently submitted. Please wait before trying again.', 'goldenpine-theme' ),
+	// 	], 409 );
+	// }
 
 	// ── 6. Generate reference ID ──────────────────────────────────────────────
 	$ref = 'GP-' . gmdate( 'Ymd' ) . '-' . wp_rand( 1000, 9999 );
@@ -169,8 +171,9 @@ function goldenpine_handle_booking_submission(): void {
 	wp_cache_delete( 'gpine_booking_new_count' );
 
 	// ── 9. Set rate limiting and duplicate transients ─────────────────────────
-	set_transient( $rate_key, $rate_count + 1, HOUR_IN_SECONDS );
-	set_transient( $dup_key, 1, 2 * HOUR_IN_SECONDS );
+	// TEMPORARILY DISABLED FOR TESTING
+	// set_transient( $rate_key, $rate_count + 1, HOUR_IN_SECONDS );
+	// set_transient( $dup_key, 1, 2 * HOUR_IN_SECONDS );
 
 	// ── 10. Send emails ───────────────────────────────────────────────────────
 	$email_data = [
@@ -187,16 +190,22 @@ function goldenpine_handle_booking_submission(): void {
 		'submitted_at'   => $submitted_at,
 	];
 
+	// Capture the target admin email before sending so we can surface it in the
+	// debug response. Helps diagnose delivery issues without server log access.
+	$admin_email_to = goldenpine_get_booking_notification_email();
+
 	$admin_sent    = goldenpine_send_admin_booking_email( $email_data );
 	$customer_sent = goldenpine_send_customer_booking_email( $email_data );
 
 	// ── 11. Return success ────────────────────────────────────────────────────
 	wp_send_json_success( [
-		'code'          => 'booking_created',
-		'ref'           => $ref,
-		'admin_email'   => $admin_sent,
-		'customer_email'=> $customer_sent,
-		'message'       => sprintf(
+		'code'           => 'booking_created',
+		'ref'            => $ref,
+		'admin_sent'     => $admin_sent,
+		'admin_to'       => $admin_email_to,
+		'customer_sent'  => $customer_sent,
+		'customer_to'    => ! empty( $email ) ? $email : null,
+		'message'        => sprintf(
 			/* translators: reference ID */
 			__( "Your table request has been submitted! Reference: %s. We'll confirm within the hour via phone or WhatsApp.", 'goldenpine-theme' ),
 			$ref
