@@ -165,7 +165,7 @@ function goldenpine_video_gallery_render( WP_Post $post ): void {
         >
 
         <button type="button" id="gpine-add-videos" class="button button-primary gpine-video-gallery__add">
-            <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-top:-2px;margin-right:4px;"></span>
+            <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-top:-2px;margin-right:4px;line-height:0.9;"></span>
             <?php esc_html_e( 'Add / Select Videos', 'goldenpine-theme' ); ?>
         </button>
 

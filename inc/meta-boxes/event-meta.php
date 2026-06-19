@@ -298,7 +298,7 @@ function goldenpine_event_meta_render( WP_Post $post ): void {
             >
 
             <button type="button" id="gpine-add-gallery-images" class="button button-primary gpine-event-meta__add-btn">
-                <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-top:-2px;margin-right:4px;"></span>
+                <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-top:-2px;margin-right:4px;line-height:0.9;"></span>
                 <?php esc_html_e( 'Add / Select Images', 'goldenpine-theme' ); ?>
             </button>
         </div><!-- .gpine-event-meta__section -->
