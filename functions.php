@@ -79,3 +79,11 @@ goldenpine_require( 'inc/customizer/customizer-reservation.php' );
 goldenpine_require( 'inc/customizer/customizer-events.php' );
 goldenpine_require( 'inc/customizer/customizer-about-page.php' );
 goldenpine_require( 'inc/customizer/customizer-contact.php' );
+goldenpine_require( 'inc/customizer/customizer-booking.php' );
+
+// ---------------------------------------------------------------------------
+// 5. Booking — CPT, AJAX handler, email functions.
+// ---------------------------------------------------------------------------
+goldenpine_require( 'inc/admin/booking-submissions.php' );
+goldenpine_require( 'inc/email/booking-emails.php' );
+goldenpine_require( 'inc/ajax/booking-ajax.php' );

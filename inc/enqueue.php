@@ -150,6 +150,38 @@ function goldenpine_enqueue_assets(): void {
             ]
         );
     }
+
+    // Booking page — only on the Booking template.
+    if ( is_page_template( 'page-booking.php' ) ) {
+        wp_enqueue_script(
+            'goldenpine-booking-page',
+            $uri . '/assets/js/page-specific-js/booking-page.js',
+            [ 'jquery' ],
+            $ver,
+            true
+        );
+
+        wp_localize_script(
+            'goldenpine-booking-page',
+            'gpineBooking',
+            [
+                'ajaxUrl' => esc_url( admin_url( 'admin-ajax.php' ) ),
+                'nonce'   => wp_create_nonce( 'gpine_booking_nonce' ),
+                'i18n'    => [
+                    'success'     => esc_html__( "Your table request has been submitted! We\u2019ll confirm within the hour via phone or WhatsApp.", 'goldenpine-theme' ),
+                    'error'       => esc_html__( 'Something went wrong. Please try again or contact us directly.', 'goldenpine-theme' ),
+                    'validName'   => esc_html__( 'Please enter your full name (at least 2 characters).', 'goldenpine-theme' ),
+                    'validPhone'  => esc_html__( 'Please enter a valid phone number.', 'goldenpine-theme' ),
+                    'validEmail'  => esc_html__( 'Please enter a valid email address.', 'goldenpine-theme' ),
+                    'validDate'   => esc_html__( 'Please select a reservation date.', 'goldenpine-theme' ),
+                    'validTime'   => esc_html__( 'Please select an arrival time.', 'goldenpine-theme' ),
+                    'validGuests' => esc_html__( 'Please select the number of guests.', 'goldenpine-theme' ),
+                    'submitting'  => esc_html__( "Submitting\u2026", 'goldenpine-theme' ),
+                    'submit'      => esc_html__( 'Confirm Reservation', 'goldenpine-theme' ),
+                ],
+            ]
+        );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'goldenpine_enqueue_assets' );
 
