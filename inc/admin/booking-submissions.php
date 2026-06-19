@@ -530,3 +530,152 @@ function goldenpine_booking_menu_badge(): void {
 	}
 }
 add_action( 'admin_menu', 'goldenpine_booking_menu_badge' );
+
+// ============================================================================
+// 9. Booking Settings Submenu
+// ============================================================================
+
+/**
+ * Add a Settings submenu under Bookings.
+ */
+function goldenpine_booking_settings_submenu(): void {
+	add_submenu_page(
+		'edit.php?post_type=gpine_booking',
+		__( 'Booking Settings', 'goldenpine-theme' ),
+		__( 'Settings', 'goldenpine-theme' ),
+		'manage_options',
+		'gpine_booking_settings',
+		'goldenpine_booking_settings_page'
+	);
+}
+add_action( 'admin_menu', 'goldenpine_booking_settings_submenu' );
+
+/**
+ * Register booking settings.
+ */
+function goldenpine_register_booking_settings(): void {
+	register_setting(
+		'gpine_booking_settings_group',
+		'gpine_booking_notification_email',
+		[
+			'type'              => 'string',
+			'sanitize_callback' => 'goldenpine_sanitize_booking_email',
+			'default'           => '',
+		]
+	);
+}
+add_action( 'admin_init', 'goldenpine_register_booking_settings' );
+
+/**
+ * Sanitize and validate the booking notification email.
+ *
+ * @param string $email Email address to validate.
+ * @return string Sanitized email or empty string if invalid.
+ */
+function goldenpine_sanitize_booking_email( string $email ): string {
+	$email = sanitize_email( trim( $email ) );
+	
+	// If empty, return empty (will use default admin email).
+	if ( empty( $email ) ) {
+		return '';
+	}
+	
+	// Validate email format.
+	if ( ! is_email( $email ) ) {
+		add_settings_error(
+			'gpine_booking_notification_email',
+			'invalid_email',
+			__( 'Please enter a valid email address.', 'goldenpine-theme' ),
+			'error'
+		);
+		// Return the old value.
+		return get_option( 'gpine_booking_notification_email', '' );
+	}
+	
+	return $email;
+}
+
+/**
+ * Render the booking settings page.
+ */
+function goldenpine_booking_settings_page(): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'goldenpine-theme' ) );
+	}
+	
+	$current_email = get_option( 'gpine_booking_notification_email', '' );
+	$admin_email   = get_option( 'admin_email' );
+	$display_email = $current_email ?: $admin_email;
+	?>
+	<div class="wrap">
+		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		
+		<p class="description">
+			<?php esc_html_e( 'Configure where booking notifications are sent when customers submit the booking form.', 'goldenpine-theme' ); ?>
+		</p>
+		
+		<?php settings_errors( 'gpine_booking_notification_email' ); ?>
+		
+		<form method="post" action="options.php">
+			<?php
+			settings_fields( 'gpine_booking_settings_group' );
+			do_settings_sections( 'gpine_booking_settings_group' );
+			?>
+			
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="gpine_booking_notification_email">
+								<?php esc_html_e( 'Notification Email Address', 'goldenpine-theme' ); ?>
+							</label>
+						</th>
+						<td>
+							<input
+								type="email"
+								id="gpine_booking_notification_email"
+								name="gpine_booking_notification_email"
+								value="<?php echo esc_attr( $current_email ); ?>"
+								class="regular-text ltr"
+								placeholder="<?php echo esc_attr( $admin_email ); ?>"
+							>
+							<p class="description">
+								<?php
+								printf(
+									/* translators: 1: default admin email, 2: current email being used */
+									esc_html__( 'Leave blank to use the default WordPress admin email (%1$s). Currently using: %2$s', 'goldenpine-theme' ),
+									'<code>' . esc_html( $admin_email ) . '</code>',
+									'<strong>' . esc_html( $display_email ) . '</strong>'
+								);
+								?>
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<?php submit_button( __( 'Save Email Address', 'goldenpine-theme' ) ); ?>
+		</form>
+		
+		<hr style="margin: 40px 0;">
+		
+		<h2><?php esc_html_e( 'How It Works', 'goldenpine-theme' ); ?></h2>
+		<ul style="list-style: disc; margin-left: 20px; line-height: 1.8;">
+			<li><?php esc_html_e( 'When a customer submits a booking request, an email notification is sent to the address configured above.', 'goldenpine-theme' ); ?></li>
+			<li><?php esc_html_e( 'If the customer provides their email address (optional field), they will also receive a confirmation email.', 'goldenpine-theme' ); ?></li>
+			<li><?php esc_html_e( 'All booking submissions are saved in the Bookings menu regardless of email delivery status.', 'goldenpine-theme' ); ?></li>
+		</ul>
+	</div>
+	<?php
+}
+
+/**
+ * Get the booking notification email address.
+ * Returns custom email if set, otherwise falls back to WordPress admin email.
+ *
+ * @return string Email address for booking notifications.
+ */
+function goldenpine_get_booking_notification_email(): string {
+	$custom_email = get_option( 'gpine_booking_notification_email', '' );
+	return $custom_email ?: get_option( 'admin_email' );
+}

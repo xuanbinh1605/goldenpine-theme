@@ -103,7 +103,7 @@ function goldenpine_email_template( string $content, string $heading = '' ): str
  * @return bool True if email was sent successfully, false otherwise.
  */
 function goldenpine_send_admin_booking_email( array $data ): bool {
-	$admin_email = get_option( 'admin_email' );
+	$admin_email = goldenpine_get_booking_notification_email();
 	$site_name   = get_bloginfo( 'name' ) ?: 'Golden Pine Pub';
 	$submitted   = isset( $data['submitted_at'] )
 		? get_date_from_gmt( gmdate( 'Y-m-d H:i:s', (int) $data['submitted_at'] ), 'd M Y, H:i' )
