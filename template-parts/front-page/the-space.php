@@ -45,6 +45,18 @@ $_gpine_card1_img_url = $_gpine_card1_img_id ? wp_get_attachment_image_url( $_gp
 $_gpine_card2_img_url = $_gpine_card2_img_id ? wp_get_attachment_image_url( $_gpine_card2_img_id, 'large' ) : '';
 $_gpine_card3_img_url = $_gpine_card3_img_id ? wp_get_attachment_image_url( $_gpine_card3_img_id, 'large' ) : '';
 
+// For GIF images, get the medium thumbnail as a static poster (shown on load; GIF plays on hover).
+$_gpine_space_gif_poster = function ( int $img_id, string $img_url ): array {
+    $is_gif = $img_url && strtolower( pathinfo( $img_url, PATHINFO_EXTENSION ) ) === 'gif';
+    $poster = $is_gif && $img_id
+        ? ( wp_get_attachment_image_url( $img_id, 'medium' ) ?: $img_url )
+        : $img_url;
+    return [ 'is_gif' => $is_gif, 'poster' => $poster ];
+};
+$_gpine_card1_gif = $_gpine_space_gif_poster( $_gpine_card1_img_id, $_gpine_card1_img_url );
+$_gpine_card2_gif = $_gpine_space_gif_poster( $_gpine_card2_img_id, $_gpine_card2_img_url );
+$_gpine_card3_gif = $_gpine_space_gif_poster( $_gpine_card3_img_id, $_gpine_card3_img_url );
+
 // Helper: resolve alt text from attachment alt field.
 $_gpine_card1_alt = $_gpine_card1_img_id ? get_post_meta( $_gpine_card1_img_id, '_wp_attachment_image_alt', true ) : '';
 $_gpine_card2_alt = $_gpine_card2_img_id ? get_post_meta( $_gpine_card2_img_id, '_wp_attachment_image_alt', true ) : '';
@@ -75,33 +87,41 @@ $_gpine_card3_alt = $_gpine_card3_img_id ? get_post_meta( $_gpine_card3_img_id, 
         <!-- Image Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
 
-            <!-- Card 1 -->
-            <div class="group relative overflow-hidden rounded-3xl h-[360px] md:h-[480px] box-glow-gold-hover bg-card">
-                <?php if ( $_gpine_card1_img_url ) : ?>
-                    <img
-                        src="<?php echo esc_url( $_gpine_card1_img_url ); ?>"
-                        alt="<?php echo esc_attr( $_gpine_card1_alt ?: $_gpine_card1_title ); ?>"
-                        loading="lazy"
-                        decoding="async"
-                        class="object-cover transition-transform duration-700 group-hover:scale-105"
-                        style="position: absolute; height: 100%; width: 100%; inset: 0px;"
-                    >
-                <?php endif; ?>
-                <div class="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-gold/40 transition-all duration-500 pointer-events-none"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-6 left-6 right-6">
-                    <h3 class="font-black uppercase text-white text-3xl md:text-4xl leading-none tracking-tight">
-                        <?php echo esc_html( $_gpine_card1_title ); ?>
-                    </h3>
-                </div>
-            </div>
+            <?php
+            $space_cards = [
+                [
+                    'url'    => $_gpine_card1_img_url,
+                    'poster' => $_gpine_card1_gif['poster'],
+                    'is_gif' => $_gpine_card1_gif['is_gif'],
+                    'alt'    => $_gpine_card1_alt ?: $_gpine_card1_title,
+                    'title'  => $_gpine_card1_title,
+                ],
+                [
+                    'url'    => $_gpine_card2_img_url,
+                    'poster' => $_gpine_card2_gif['poster'],
+                    'is_gif' => $_gpine_card2_gif['is_gif'],
+                    'alt'    => $_gpine_card2_alt ?: $_gpine_card2_title,
+                    'title'  => $_gpine_card2_title,
+                ],
+                [
+                    'url'    => $_gpine_card3_img_url,
+                    'poster' => $_gpine_card3_gif['poster'],
+                    'is_gif' => $_gpine_card3_gif['is_gif'],
+                    'alt'    => $_gpine_card3_alt ?: $_gpine_card3_title,
+                    'title'  => $_gpine_card3_title,
+                ],
+            ];
 
-            <!-- Card 2 -->
-            <div class="group relative overflow-hidden rounded-3xl h-[360px] md:h-[480px] box-glow-gold-hover bg-card">
-                <?php if ( $_gpine_card2_img_url ) : ?>
+            foreach ( $space_cards as $sc ) :
+            ?>
+            <div class="group relative overflow-hidden rounded-3xl h-[360px] md:h-[480px] box-glow-gold-hover bg-card <?php echo $sc['is_gif'] ? 'gpine-gif-card' : ''; ?>">
+                <?php if ( $sc['url'] ) : ?>
                     <img
-                        src="<?php echo esc_url( $_gpine_card2_img_url ); ?>"
-                        alt="<?php echo esc_attr( $_gpine_card2_alt ?: $_gpine_card2_title ); ?>"
+                        src="<?php echo esc_url( $sc['poster'] ); ?>"
+                        <?php if ( $sc['is_gif'] ) : ?>
+                            data-gif-src="<?php echo esc_url( $sc['url'] ); ?>"
+                        <?php endif; ?>
+                        alt="<?php echo esc_attr( $sc['alt'] ); ?>"
                         loading="lazy"
                         decoding="async"
                         class="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -112,31 +132,11 @@ $_gpine_card3_alt = $_gpine_card3_img_id ? get_post_meta( $_gpine_card3_img_id, 
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 right-6">
                     <h3 class="font-black uppercase text-white text-3xl md:text-4xl leading-none tracking-tight">
-                        <?php echo esc_html( $_gpine_card2_title ); ?>
+                        <?php echo esc_html( $sc['title'] ); ?>
                     </h3>
                 </div>
             </div>
-
-            <!-- Card 3 -->
-            <div class="group relative overflow-hidden rounded-3xl h-[360px] md:h-[480px] box-glow-gold-hover bg-card">
-                <?php if ( $_gpine_card3_img_url ) : ?>
-                    <img
-                        src="<?php echo esc_url( $_gpine_card3_img_url ); ?>"
-                        alt="<?php echo esc_attr( $_gpine_card3_alt ?: $_gpine_card3_title ); ?>"
-                        loading="lazy"
-                        decoding="async"
-                        class="object-cover transition-transform duration-700 group-hover:scale-105"
-                        style="position: absolute; height: 100%; width: 100%; inset: 0px;"
-                    >
-                <?php endif; ?>
-                <div class="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-gold/40 transition-all duration-500 pointer-events-none"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-6 left-6 right-6">
-                    <h3 class="font-black uppercase text-white text-3xl md:text-4xl leading-none tracking-tight">
-                        <?php echo esc_html( $_gpine_card3_title ); ?>
-                    </h3>
-                </div>
-            </div>
+            <?php endforeach; ?>
 
         </div>
 

@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // ---------------------------------------------------------------------------
 // Define theme constants for convenience.
 // ---------------------------------------------------------------------------
-define( 'GOLDENPINE_VERSION', '1.0.3' );
+define( 'GOLDENPINE_VERSION', '1.0.4' );
 define( 'GOLDENPINE_DIR',     get_template_directory() );
 define( 'GOLDENPINE_URI',     get_template_directory_uri() );
 

@@ -22,15 +22,23 @@ $subtext  = get_theme_mod( 'goldenpine_about_page_concept_subtext', 'Built to tr
 // 4 image cards
 $cards = [];
 for ( $i = 1; $i <= 4; $i++ ) {
-	$image_id  = absint( get_theme_mod( "goldenpine_about_page_concept_card{$i}_image", 0 ) );
-	$image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : '';
-	$image_alt = $image_id ? (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '';
-	$title     = get_theme_mod( "goldenpine_about_page_concept_card{$i}_title", '' );
+	$image_id   = absint( get_theme_mod( "goldenpine_about_page_concept_card{$i}_image", 0 ) );
+	$image_url  = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : '';
+	$image_alt  = $image_id ? (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '';
+	$title      = get_theme_mod( "goldenpine_about_page_concept_card{$i}_title", '' );
+
+	$is_gif    = $image_url && strtolower( pathinfo( $image_url, PATHINFO_EXTENSION ) ) === 'gif';
+	// For GIFs: use the medium-sized thumbnail (static first frame on most hosts) as the poster.
+	$poster_url = ( $is_gif && $image_id )
+		? ( wp_get_attachment_image_url( $image_id, 'medium' ) ?: $image_url )
+		: $image_url;
 
 	$cards[] = [
-		'url'   => $image_url,
-		'alt'   => $image_alt,
-		'title' => $title,
+		'url'        => $image_url,
+		'poster_url' => $poster_url,
+		'is_gif'     => $is_gif,
+		'alt'        => $image_alt,
+		'title'      => $title,
 	];
 }
 
@@ -78,10 +86,13 @@ $facebook_url   = get_theme_mod( 'goldenpine_social_facebook', 'https://www.face
 		<!-- 4 Image Cards -->
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
 			<?php foreach ( $cards as $card ) : ?>
-				<div class="relative overflow-hidden rounded-3xl h-56 md:h-80 group box-glow-gold-hover">
+				<div class="relative overflow-hidden rounded-3xl h-56 md:h-80 group box-glow-gold-hover <?php echo $card['is_gif'] ? 'gpine-gif-card' : ''; ?>">
 					<?php if ( $card['url'] ) : ?>
 						<img
-							src="<?php echo esc_url( $card['url'] ); ?>"
+							src="<?php echo esc_url( $card['poster_url'] ); ?>"
+							<?php if ( $card['is_gif'] ) : ?>
+								data-gif-src="<?php echo esc_url( $card['url'] ); ?>"
+							<?php endif; ?>
 							alt="<?php echo esc_attr( $card['alt'] ); ?>"
 							loading="lazy"
 							decoding="async"

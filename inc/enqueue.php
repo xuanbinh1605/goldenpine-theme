@@ -88,6 +88,15 @@ function goldenpine_enqueue_assets(): void {
         true
     );
 
+    // GIF hover control (used on About page concept cards and front page space cards)
+    wp_enqueue_script(
+        'goldenpine-gif-hover',
+        $uri . '/assets/js/gif-hover-control.js',
+        [],
+        $ver,
+        true
+    );
+
     // -----------------------------------------------------------------------
     // Scripts — page-specific (conditional)
     // -----------------------------------------------------------------------
