@@ -63,7 +63,11 @@ $_gpine_card2_alt = $_gpine_card2_img_id ? get_post_meta( $_gpine_card2_img_id, 
 $_gpine_card3_alt = $_gpine_card3_img_id ? get_post_meta( $_gpine_card3_img_id, '_wp_attachment_image_alt', true ) : '';
 ?>
 
-<section id="space" class="py-24 md:py-32 px-6 lg:px-12 bg-background">
+<section id="space" class="relative py-24 md:py-32 px-6 lg:px-12 bg-background overflow-hidden">
+    <!-- Decorative gradient glows -->
+    <div aria-hidden="true" class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(226,190,61,0.20) 0%, transparent 70%);filter:blur(50px)"></div>
+    <div aria-hidden="true" class="absolute bottom-0 left-0 w-[500px] h-[400px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(226,190,61,0.12) 0%, transparent 70%);filter:blur(70px)"></div>
+    <div aria-hidden="true" class="absolute bottom-0 right-0 w-[400px] h-[300px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(226,190,61,0.10) 0%, transparent 70%);filter:blur(60px)"></div>
     <div class="max-w-7xl mx-auto">
 
         <!-- Section Label -->

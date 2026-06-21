@@ -44,15 +44,18 @@ $smaller_events = array_slice( $events, 1 );
 	<!-- Decorative gradient glows -->
 	<div
 		aria-hidden="true"
-		class="absolute -left-40 bottom-0 w-[800px] h-[700px] pointer-events-none glow-gold-strong"
+		class="absolute -left-40 bottom-0 w-[800px] h-[700px] pointer-events-none"
+		style="background:radial-gradient(circle, rgba(226,190,61,0.26) 0%, transparent 70%);filter:blur(60px)"
 	></div>
 	<div
 		aria-hidden="true"
-		class="absolute right-0 top-1/3 w-[500px] h-[500px] pointer-events-none glow-gold-medium"
+		class="absolute right-0 top-1/3 w-[500px] h-[500px] pointer-events-none"
+		style="background:radial-gradient(circle, rgba(226,190,61,0.16) 0%, transparent 70%);filter:blur(70px)"
 	></div>
 	<div
 		aria-hidden="true"
-		class="absolute left-1/2 top-0 w-[600px] h-[200px] pointer-events-none glow-gold-subtle"
+		class="absolute left-1/2 top-0 w-[600px] h-[200px] pointer-events-none"
+		style="background:radial-gradient(ellipse, rgba(226,190,61,0.10) 0%, transparent 70%);filter:blur(80px)"
 	></div>
 
 	<div class="relative max-w-7xl mx-auto">
