@@ -114,9 +114,14 @@ $smaller_events = array_slice( $events, 1 );
 			$feat_image_url = get_the_post_thumbnail_url( $featured_event->ID, 'large' );
 			?>
 
-			<!-- Featured Event Card (Large) -->
-			<div class="rounded-3xl overflow-hidden border border-gold/40 mb-6 box-glow-gold-hover">
-				<div class="grid grid-cols-1 lg:grid-cols-2">
+		<!-- Featured Event Card (Large) -->
+		<div 
+			class="rounded-3xl overflow-hidden border border-gold/40 mb-6 box-glow-gold-hover cursor-pointer gpine-clickable-card"
+			data-href="<?php echo esc_url( get_permalink( $featured_event->ID ) ); ?>"
+			role="link"
+			tabindex="0"
+		>
+			<div class="grid grid-cols-1 lg:grid-cols-2">
 
 					<!-- Image Column -->
 					<div class="relative h-[320px] lg:h-full min-h-[360px]">

@@ -116,6 +116,25 @@ function goldenpine_enqueue_assets(): void {
             $ver,
             true
         );
+
+        wp_enqueue_script(
+            'goldenpine-clickable-card',
+            $uri . '/assets/js/clickable-card.js',
+            [],
+            $ver,
+            true
+        );
+    }
+
+    // Clickable card script for event archive.
+    if ( is_post_type_archive( 'event' ) ) {
+        wp_enqueue_script(
+            'goldenpine-clickable-card',
+            $uri . '/assets/js/clickable-card.js',
+            [],
+            $ver,
+            true
+        );
     }
 
     if ( is_page( 'about' ) ) {

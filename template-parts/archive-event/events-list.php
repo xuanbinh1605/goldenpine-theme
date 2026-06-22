@@ -179,10 +179,13 @@ if ( is_wp_error( $event_types ) ) {
 					$data_types      = ! empty( $term_slugs ) ? implode( ' ', $term_slugs ) : '';
 					?>
 
-					<article
-						class="gpine-event-card group overflow-hidden rounded-3xl border border-border bg-card hover:border-gold/50 transition-colors box-glow-gold-hover"
-						data-types="<?php echo esc_attr( $data_types ); ?>"
-					>
+				<article
+					class="gpine-event-card gpine-clickable-card cursor-pointer group overflow-hidden rounded-3xl border border-border bg-card hover:border-gold/50 transition-colors box-glow-gold-hover"
+					data-types="<?php echo esc_attr( $data_types ); ?>"
+					data-href="<?php echo esc_url( $event_permalink ); ?>"
+					role="link"
+					tabindex="0"
+				>
 						<div class="grid grid-cols-1 md:grid-cols-12 gap-0">
 
 							<!-- Date Column -->
