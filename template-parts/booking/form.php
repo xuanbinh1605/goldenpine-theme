@@ -211,12 +211,12 @@ $min_date = gmdate( 'Y-m-d' );
 							<?php esc_html_e( 'Time', 'goldenpine-theme' ); ?>
 							<span class="text-gold" aria-hidden="true">*</span>
 						</label>
-						<select
-							id="booking_time"
-							name="booking_time"
-							required
-							class="booking-field bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
-						>
+					<select
+						id="booking_time"
+						name="booking_time"
+						required
+						class="booking-field gpine-select bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
+					>
 							<option value=""><?php esc_html_e( 'Select', 'goldenpine-theme' ); ?></option>
 							<?php foreach ( $time_options as $time ) : ?>
 								<option value="<?php echo esc_attr( $time ); ?>"><?php echo esc_html( $time ); ?></option>
@@ -234,12 +234,12 @@ $min_date = gmdate( 'Y-m-d' );
 						<?php esc_html_e( 'Guests', 'goldenpine-theme' ); ?>
 						<span class="text-gold" aria-hidden="true">*</span>
 					</label>
-					<select
-						id="booking_guests"
-						name="booking_guests"
-						required
-						class="booking-field bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
-					>
+				<select
+					id="booking_guests"
+					name="booking_guests"
+					required
+					class="booking-field gpine-select bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
+				>
 						<?php foreach ( $guest_options as $val => $label ) : ?>
 							<option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
@@ -256,7 +256,7 @@ $min_date = gmdate( 'Y-m-d' );
 						id="booking_note"
 						name="booking_note"
 						rows="4"
-						placeholder="<?php esc_attr_e( 'Birthday, VIP booth, which event you\'re attending\xe2\x80\xa6', 'goldenpine-theme' ); ?>"
+						placeholder="<?php esc_attr_e( 'Birthday, VIP booth, which event you\'re attending', 'goldenpine-theme' ); ?>"
 						class="booking-field bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base placeholder:text-foreground/30 focus:outline-none focus:border-gold transition-colors resize-none leading-relaxed"
 					></textarea>
 				</div>
