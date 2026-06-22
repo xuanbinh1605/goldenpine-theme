@@ -38,12 +38,16 @@ $_gpine_about_cta_link    = get_theme_mod( 'goldenpine_about_cta_link', '/about'
 <section id="about" class="relative py-24 md:py-32 px-6 lg:px-12 bg-background overflow-hidden">
     
     <!-- Decorative gradient blur -->
-    <div 
-        aria-hidden="true" 
-        class="absolute right-0 top-0 w-[600px] h-[600px] pointer-events-none" 
-        style="background: radial-gradient(circle, rgba(226, 190, 61, 0.08) 0%, transparent 70%); filter: blur(80px);"
-    ></div>
-
+    <div aria-hidden="true" class="absolute right-0 top-0 w-[700px] h-[700px] pointer-events-none" 
+        style="background:radial-gradient(circle, rgba(226,190,61,0.22) 0%, transparent 70%);filter:blur(60px)">
+    </div>
+    <div aria-hidden="true" class="absolute -left-20 bottom-0 w-[500px] h-[500px] pointer-events-none" 
+        style="background:radial-gradient(circle, rgba(226,190,61,0.15) 0%, transparent 70%);filter:blur(70px)">
+    </div>
+    <div aria-hidden="true" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[300px] pointer-events-none" 
+        style="background:radial-gradient(ellipse, rgba(226,190,61,0.07) 0%, transparent 70%);filter:blur(90px)">
+    </div>
+    
     <div class="relative max-w-7xl mx-auto">
         
         <!-- Section Label -->
