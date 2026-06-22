@@ -185,12 +185,83 @@
 			'  border-top:1px solid rgba(255,255,255,.07);',
 			'  font-size:11px;color:rgba(245,240,232,.5);',
 			'}',
-			'.gpine-cal__legend-dot{',
-			'  width:6px;height:6px;border-radius:50%;',
-			'  background:#e2be3d;flex-shrink:0;',
-			'}',
+		'.gpine-cal__legend-dot{',
+		'  width:6px;height:6px;border-radius:50%;',
+		'  background:#e2be3d;flex-shrink:0;',
+		'}',
 
-			/* Toast (unchanged) */
+		/* ── Custom Dropdown (for Time & Guests) ── */
+		'.gpine-dropdown-wrap{',
+		'  position:relative;',
+		'}',
+		'.gpine-dropdown-wrap select{display:none;}',
+		'.gpine-dropdown__trigger{',
+		'  width:100%;',
+		'  background:var(--background);',
+		'  border:1px solid var(--border);',
+		'  border-radius:18px;',
+		'  padding:16px 20px;',
+		'  font-size:16px;',
+		'  color:var(--foreground);',
+		'  cursor:pointer;',
+		'  transition:border-color .2s;',
+		'  display:flex;align-items:center;justify-content:space-between;',
+		'  text-align:left;',
+		'}',
+		'.gpine-dropdown__trigger:hover{border-color:var(--gold-main);}',
+		'.gpine-dropdown__trigger.is-open{border-color:var(--gold-main);}',
+		'.gpine-dropdown__trigger.is-error{border-color:#ef4444;}',
+		'.gpine-dropdown__placeholder{color:rgba(245,240,232,.5);}',
+		'.gpine-dropdown__value{color:var(--foreground);}',
+		'.gpine-dropdown__icon{',
+		'  color:var(--gold-main);',
+		'  flex-shrink:0;',
+		'  transition:transform .2s;',
+		'}',
+		'.gpine-dropdown__trigger.is-open .gpine-dropdown__icon{transform:rotate(180deg);}',
+		'.gpine-dropdown__menu{',
+		'  position:absolute;top:calc(100% + 8px);left:0;right:0;',
+		'  z-index:200;',
+		'  background:#1f1f1f;',
+		'  border:1px solid rgba(226,190,61,.38);',
+		'  border-radius:18px;',
+		'  padding:8px;',
+		'  box-shadow:0 28px 64px rgba(0,0,0,.75),0 0 0 1px rgba(226,190,61,.07);',
+		'  max-height:280px;',
+		'  overflow-y:auto;',
+		'  animation:gpineCalIn .2s cubic-bezier(.22,1,.36,1) forwards;',
+		'}',
+		'.gpine-dropdown__option{',
+		'  display:flex;align-items:center;',
+		'  padding:12px 14px;',
+		'  border-radius:10px;',
+		'  font-size:14px;font-weight:500;',
+		'  color:#f5f0e8;',
+		'  background:transparent;',
+		'  border:1px solid transparent;',
+		'  cursor:pointer;',
+		'  transition:background .13s,border-color .13s;',
+		'  margin-bottom:2px;',
+		'}',
+		'.gpine-dropdown__option:hover{',
+		'  background:rgba(226,190,61,.13);',
+		'  border-color:rgba(226,190,61,.3);',
+		'}',
+		'.gpine-dropdown__option.is-selected{',
+		'  background:#e2be3d!important;',
+		'  color:#111!important;',
+		'  font-weight:700;',
+		'  border-color:#e2be3d!important;',
+		'}',
+		'.gpine-dropdown__menu::-webkit-scrollbar{width:6px;}',
+		'.gpine-dropdown__menu::-webkit-scrollbar-track{background:transparent;}',
+		'.gpine-dropdown__menu::-webkit-scrollbar-thumb{',
+		'  background:rgba(226,190,61,.3);',
+		'  border-radius:10px;',
+		'}',
+		'.gpine-dropdown__menu::-webkit-scrollbar-thumb:hover{background:rgba(226,190,61,.5);}',
+
+		/* Toast (unchanged) */
 			'#gpine-toast-container{',
 			'  position:fixed;bottom:24px;right:24px;z-index:99999;',
 			'  display:flex;flex-direction:column;gap:10px;pointer-events:none;',
@@ -603,7 +674,152 @@
 	}() );
 
 	/* =========================================================================
-	   5. LIVE VALIDATION — blur events
+	   5. CUSTOM DROPDOWNS (Time & Guests)
+	   ========================================================================= */
+	( function () {
+		var selects = document.querySelectorAll( '#booking_time, #booking_guests' );
+		if ( ! selects.length ) return;
+
+		selects.forEach( function ( select ) {
+			var wrap = document.createElement( 'div' );
+			wrap.className = 'gpine-dropdown-wrap';
+			select.parentNode.insertBefore( wrap, select );
+			wrap.appendChild( select );
+
+			var trigger = document.createElement( 'button' );
+			trigger.type = 'button';
+			trigger.className = 'gpine-dropdown__trigger';
+			trigger.setAttribute( 'aria-haspopup', 'listbox' );
+			trigger.setAttribute( 'aria-expanded', 'false' );
+
+			var valueSpan = document.createElement( 'span' );
+			valueSpan.className = 'gpine-dropdown__value gpine-dropdown__placeholder';
+			valueSpan.textContent = select.options[ select.selectedIndex ].text;
+
+			var icon = document.createElement( 'svg' );
+			icon.className = 'gpine-dropdown__icon';
+			icon.setAttribute( 'xmlns', 'http://www.w3.org/2000/svg' );
+			icon.setAttribute( 'width', '18' );
+			icon.setAttribute( 'height', '18' );
+			icon.setAttribute( 'viewBox', '0 0 24 24' );
+			icon.setAttribute( 'fill', 'none' );
+			icon.setAttribute( 'stroke', 'currentColor' );
+			icon.setAttribute( 'stroke-width', '2' );
+			icon.setAttribute( 'stroke-linecap', 'round' );
+			icon.setAttribute( 'stroke-linejoin', 'round' );
+			icon.setAttribute( 'aria-hidden', 'true' );
+			icon.innerHTML = '<path d="m6 9 6 6 6-6"/>';
+
+			trigger.appendChild( valueSpan );
+			trigger.appendChild( icon );
+			wrap.appendChild( trigger );
+
+			var menu = null;
+			var isOpen = false;
+
+			function createMenu() {
+				menu = document.createElement( 'div' );
+				menu.className = 'gpine-dropdown__menu';
+				menu.setAttribute( 'role', 'listbox' );
+
+				Array.from( select.options ).forEach( function ( opt, idx ) {
+					if ( idx === 0 && opt.value === '' ) return; // Skip placeholder option
+
+					var option = document.createElement( 'div' );
+					option.className = 'gpine-dropdown__option';
+					option.setAttribute( 'role', 'option' );
+					option.setAttribute( 'data-value', opt.value );
+					option.textContent = opt.text;
+
+					if ( opt.value === select.value ) {
+						option.classList.add( 'is-selected' );
+					}
+
+					option.addEventListener( 'click', function ( e ) {
+						e.stopPropagation();
+						selectOption( opt.value, opt.text );
+					} );
+
+					menu.appendChild( option );
+				} );
+
+				wrap.appendChild( menu );
+			}
+
+			function selectOption( value, text ) {
+				select.value = value;
+				valueSpan.textContent = text;
+				valueSpan.classList.remove( 'gpine-dropdown__placeholder' );
+				trigger.classList.remove( 'is-error' );
+
+				// Clear field error
+				var errorP = wrap.nextElementSibling;
+				if ( errorP && errorP.classList.contains( 'field-error' ) ) {
+					errorP.classList.add( 'hidden' );
+				}
+
+				// Trigger change event
+				var event = new Event( 'change', { bubbles: true } );
+				select.dispatchEvent( event );
+
+				close();
+			}
+
+			function open() {
+				if ( isOpen ) return;
+				createMenu();
+				isOpen = true;
+				trigger.classList.add( 'is-open' );
+				trigger.setAttribute( 'aria-expanded', 'true' );
+
+				setTimeout( function () {
+					document.addEventListener( 'click', outsideClick );
+					document.addEventListener( 'keydown', escClose );
+				}, 0 );
+			}
+
+			function close() {
+				if ( ! isOpen ) return;
+				isOpen = false;
+				trigger.classList.remove( 'is-open' );
+				trigger.setAttribute( 'aria-expanded', 'false' );
+				document.removeEventListener( 'click', outsideClick );
+				document.removeEventListener( 'keydown', escClose );
+				if ( menu ) {
+					menu.remove();
+					menu = null;
+				}
+			}
+
+			function outsideClick( e ) {
+				if ( ! wrap.contains( e.target ) ) close();
+			}
+
+			function escClose( e ) {
+				if ( e.key === 'Escape' ) {
+					close();
+					trigger.focus();
+				}
+			}
+
+			trigger.addEventListener( 'click', function ( e ) {
+				e.stopPropagation();
+				isOpen ? close() : open();
+			} );
+
+			// Expose error state setter for validation
+			select.setDropdownError = function ( hasError ) {
+				if ( hasError ) {
+					trigger.classList.add( 'is-error' );
+				} else {
+					trigger.classList.remove( 'is-error' );
+				}
+			};
+		} );
+	}() );
+
+	/* =========================================================================
+	   6. LIVE VALIDATION — blur events
 	   ========================================================================= */
 	$( document ).on( 'blur', '#gpine-booking-form .booking-field', function () {
 		// Hidden inputs (date value) have no interactive blur — skip.
@@ -617,7 +833,7 @@
 	} );
 
 	/* =========================================================================
-	   6. AJAX FORM SUBMISSION
+	   7. AJAX FORM SUBMISSION
 	   ========================================================================= */
 	var isSubmitting = false;
 

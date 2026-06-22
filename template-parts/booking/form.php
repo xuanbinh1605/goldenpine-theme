@@ -215,7 +215,7 @@ $min_date = gmdate( 'Y-m-d' );
 						id="booking_time"
 						name="booking_time"
 						required
-						class="booking-field gpine-select bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
+						class="booking-field bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
 					>
 							<option value=""><?php esc_html_e( 'Select', 'goldenpine-theme' ); ?></option>
 							<?php foreach ( $time_options as $time ) : ?>
@@ -238,7 +238,7 @@ $min_date = gmdate( 'Y-m-d' );
 					id="booking_guests"
 					name="booking_guests"
 					required
-					class="booking-field gpine-select bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
+					class="booking-field bg-background border border-border rounded-2xl px-5 py-4 text-foreground text-base focus:outline-none focus:border-gold transition-colors cursor-pointer"
 				>
 						<?php foreach ( $guest_options as $val => $label ) : ?>
 							<option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
