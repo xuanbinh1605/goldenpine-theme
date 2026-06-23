@@ -142,10 +142,10 @@ $_gpine_video_count_mobile = count( $_gpine_hero_videos_mobile );
                         src="<?php echo esc_url( $video['url'] ); ?>"
                         type="<?php echo esc_attr( $video['mime'] ); ?>"
                         <?php echo 1 === $_gpine_video_count_pc ? 'loop' : ''; ?>
-                        autoplay
+                        <?php echo 0 === $i ? 'autoplay' : ''; ?>
                         muted
                         playsinline
-                        preload="<?php echo 0 === $i ? 'auto' : 'metadata'; ?>"
+                        preload="<?php echo 0 === $i ? 'auto' : 'none'; ?>"
                         aria-hidden="true"
                     ></video>
                 <?php endforeach; ?>
@@ -161,10 +161,10 @@ $_gpine_video_count_mobile = count( $_gpine_hero_videos_mobile );
                         src="<?php echo esc_url( $video['url'] ); ?>"
                         type="<?php echo esc_attr( $video['mime'] ); ?>"
                         <?php echo 1 === $_gpine_video_count_mobile ? 'loop' : ''; ?>
-                        autoplay
+                        <?php echo 0 === $i ? 'autoplay' : ''; ?>
                         muted
                         playsinline
-                        preload="<?php echo 0 === $i ? 'auto' : 'metadata'; ?>"
+                        preload="<?php echo 0 === $i ? 'auto' : 'none'; ?>"
                         aria-hidden="true"
                     ></video>
                 <?php endforeach; ?>
