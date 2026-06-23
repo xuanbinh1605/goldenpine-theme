@@ -1,7 +1,7 @@
 /**
  * Goldenpine Theme — assets/js/page-specific-js/hero-video.js
  *
- * Manages the Hero section video carousel.
+ * Manages the Hero section video carousel (PC and Mobile).
  *
  * Behaviour:
  *  - Single video:   loops indefinitely (loop attr set server-side).
@@ -19,18 +19,32 @@
 window.goldenpineHeroVideo = ( function () {
     'use strict';
 
-    var videos    = [];
-    var current   = 0;
-    var container = null;
-
     // ------------------------------------------------------------------
-    // Initialise — collect video elements and wire up events.
+    // Initialise — pick the correct container for the current viewport.
+    // Only one container is ever active to avoid background videos
+    // consuming autoplay budget and blocking crossfade transitions.
     // ------------------------------------------------------------------
     function init() {
-        container = document.querySelector( '.hero-videos-container' );
-        if ( ! container ) return;
+        var mdBreakpoint  = 768; // must match Tailwind md: 768px
+        var isMobile      = window.innerWidth < mdBreakpoint;
+        var primaryDevice = isMobile ? 'mobile' : 'pc';
+        var fallbackDevice= isMobile ? 'pc'     : 'mobile';
 
-        videos = Array.prototype.slice.call(
+        var primary  = document.querySelector( '.hero-videos-container[data-device="' + primaryDevice  + '"]' );
+        var fallback = document.querySelector( '.hero-videos-container[data-device="' + fallbackDevice + '"]' );
+
+        // Prefer the device-appropriate container; fall back when it has no videos.
+        var target = ( primary && primary.querySelector( '.hero-video' ) ) ? primary : fallback;
+        if ( target ) {
+            initContainer( target );
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Initialise a single video container.
+    // ------------------------------------------------------------------
+    function initContainer( container ) {
+        var videos = Array.prototype.slice.call(
             container.querySelectorAll( '.hero-video' )
         );
 
@@ -43,9 +57,13 @@ window.goldenpineHeroVideo = ( function () {
         }
 
         // Multiple videos: advance on 'ended'.
+        var current = 0;
+
         videos.forEach( function ( video, index ) {
             video.addEventListener( 'ended', function () {
-                advanceTo( ( index + 1 ) % videos.length );
+                var nextIndex = ( index + 1 ) % videos.length;
+                advanceTo( videos, current, nextIndex );
+                current = nextIndex;
             } );
         } );
 
@@ -56,8 +74,8 @@ window.goldenpineHeroVideo = ( function () {
     // ------------------------------------------------------------------
     // Crossfade to a target video index.
     // ------------------------------------------------------------------
-    function advanceTo( nextIndex ) {
-        var outgoing = videos[ current ];
+    function advanceTo( videos, currentIndex, nextIndex ) {
+        var outgoing = videos[ currentIndex ];
         var incoming = videos[ nextIndex ];
 
         // Start fading out the current video.
@@ -76,8 +94,6 @@ window.goldenpineHeroVideo = ( function () {
             outgoing.pause();
             outgoing.currentTime = 0;
         }, transitionDuration );
-
-        current = nextIndex;
     }
 
     // ------------------------------------------------------------------
@@ -87,14 +103,16 @@ window.goldenpineHeroVideo = ( function () {
         // Ensure video is muted for autoplay policy compliance.
         video.muted = true;
 
-        // If video metadata isn't loaded yet, wait for it.
-        if ( video.readyState < 2 ) {
-            video.addEventListener( 'loadedmetadata', function onLoaded() {
-                video.removeEventListener( 'loadedmetadata', onLoaded );
+        if ( video.readyState === 0 ) {
+            // Nothing loaded yet — wait for the browser to signal it can play.
+            var onCanPlay = function () {
+                video.removeEventListener( 'canplay', onCanPlay );
                 attemptPlay( video );
-            } );
-            video.load(); // Trigger loading if not started.
+            };
+            video.addEventListener( 'canplay', onCanPlay );
+            video.load();
         } else {
+            // Metadata or data already available — play immediately.
             attemptPlay( video );
         }
     }

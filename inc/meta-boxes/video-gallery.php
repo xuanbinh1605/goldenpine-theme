@@ -2,9 +2,11 @@
 /**
  * Goldenpine Theme — inc/meta-boxes/video-gallery.php
  *
- * Registers the "Hero Videos" gallery meta box on the gpine_video CPT.
- * Video attachment IDs are stored as a comma-separated string in post meta
- * under the key '_gpine_hero_videos'.
+ * Registers TWO "Hero Videos" gallery meta boxes on the gpine_video CPT:
+ *  - "Hero Videos (PC)" — stores IDs in '_gpine_hero_videos_pc'
+ *  - "Hero Videos (Mobile)" — stores IDs in '_gpine_hero_videos_mobile'
+ *
+ * Video attachment IDs are stored as comma-separated strings in post meta.
  *
  * Admin UI uses the native wp.media() frame (wp-media) for picking, sorting,
  * and removing video attachments. Sorting is powered by jQuery UI Sortable
@@ -18,13 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // ---------------------------------------------------------------------------
-// Register the meta box.
+// Register the meta boxes (PC and Mobile).
 // ---------------------------------------------------------------------------
 function goldenpine_register_video_gallery_metabox(): void {
     add_meta_box(
-        'goldenpine_hero_videos',
-        esc_html__( 'Hero Videos', 'goldenpine-theme' ),
-        'goldenpine_video_gallery_render',
+        'goldenpine_hero_videos_pc',
+        esc_html__( 'Hero Videos (PC)', 'goldenpine-theme' ),
+        'goldenpine_video_gallery_render_pc',
+        'gpine_video',
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
+        'goldenpine_hero_videos_mobile',
+        esc_html__( 'Hero Videos (Mobile)', 'goldenpine-theme' ),
+        'goldenpine_video_gallery_render_mobile',
         'gpine_video',
         'normal',
         'high'
@@ -82,14 +93,28 @@ function goldenpine_enqueue_video_gallery_assets( string $hook ): void {
 add_action( 'admin_enqueue_scripts', 'goldenpine_enqueue_video_gallery_assets' );
 
 // ---------------------------------------------------------------------------
-// Render the meta box.
+// Render the meta box (PC).
 // ---------------------------------------------------------------------------
-function goldenpine_video_gallery_render( WP_Post $post ): void {
+function goldenpine_video_gallery_render_pc( WP_Post $post ): void {
+    goldenpine_video_gallery_render_metabox( $post, 'pc', '_gpine_hero_videos_pc' );
+}
 
-    wp_nonce_field( 'goldenpine_save_hero_videos', 'goldenpine_hero_videos_nonce' );
+// ---------------------------------------------------------------------------
+// Render the meta box (Mobile).
+// ---------------------------------------------------------------------------
+function goldenpine_video_gallery_render_mobile( WP_Post $post ): void {
+    goldenpine_video_gallery_render_metabox( $post, 'mobile', '_gpine_hero_videos_mobile' );
+}
+
+// ---------------------------------------------------------------------------
+// Shared render function for both PC and Mobile meta boxes.
+// ---------------------------------------------------------------------------
+function goldenpine_video_gallery_render_metabox( WP_Post $post, string $device, string $meta_key ): void {
+
+    wp_nonce_field( 'goldenpine_save_hero_videos_' . $device, 'goldenpine_hero_videos_nonce_' . $device );
 
     // Retrieve stored IDs and resolve each to a URL + title.
-    $ids_raw     = get_post_meta( $post->ID, '_gpine_hero_videos', true );
+    $ids_raw     = get_post_meta( $post->ID, $meta_key, true );
     $ids         = array_filter( array_map( 'absint', explode( ',', (string) $ids_raw ) ) );
     $videos_data = [];
 
@@ -107,10 +132,16 @@ function goldenpine_video_gallery_render( WP_Post $post ): void {
     }
     ?>
 
-    <div class="gpine-video-gallery">
+    <div class="gpine-video-gallery" data-device="<?php echo esc_attr( $device ); ?>">
 
         <p class="description gpine-video-gallery__help">
-            <?php esc_html_e( 'Upload or select videos from the Media Library. Drag rows to reorder. Only .mp4 / .webm / .ogg files are recommended.', 'goldenpine-theme' ); ?>
+            <?php
+            printf(
+                /* translators: %s: device type (PC or Mobile) */
+                esc_html__( 'Upload or select videos for %s display. Drag rows to reorder. Only .mp4 / .webm / .ogg files are recommended.', 'goldenpine-theme' ),
+                '<strong>' . esc_html( strtoupper( $device ) ) . '</strong>'
+            );
+            ?>
         </p>
 
         <?php if ( empty( $videos_data ) ) : ?>
@@ -119,7 +150,7 @@ function goldenpine_video_gallery_render( WP_Post $post ): void {
             </p>
         <?php endif; ?>
 
-        <ul id="gpine-video-list" class="gpine-video-list">
+        <ul id="gpine-video-list-<?php echo esc_attr( $device ); ?>" class="gpine-video-list">
             <?php foreach ( $videos_data as $video ) : ?>
                 <li class="gpine-video-item" data-id="<?php echo esc_attr( $video['id'] ); ?>">
 
@@ -159,12 +190,12 @@ function goldenpine_video_gallery_render( WP_Post $post ): void {
 
         <input
             type="hidden"
-            id="gpine_hero_videos"
-            name="_gpine_hero_videos"
+            id="gpine_hero_videos_<?php echo esc_attr( $device ); ?>"
+            name="<?php echo esc_attr( $meta_key ); ?>"
             value="<?php echo esc_attr( implode( ',', array_column( $videos_data, 'id' ) ) ); ?>"
         >
 
-        <button type="button" id="gpine-add-videos" class="button button-primary gpine-video-gallery__add">
+        <button type="button" id="gpine-add-videos-<?php echo esc_attr( $device ); ?>" class="button button-primary gpine-video-gallery__add">
             <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle;margin-top:-2px;margin-right:4px;line-height:0.9;"></span>
             <?php esc_html_e( 'Add / Select Videos', 'goldenpine-theme' ); ?>
         </button>
@@ -175,20 +206,9 @@ function goldenpine_video_gallery_render( WP_Post $post ): void {
 }
 
 // ---------------------------------------------------------------------------
-// Save the meta box value.
+// Save the meta box values (PC and Mobile).
 // ---------------------------------------------------------------------------
 function goldenpine_save_video_gallery( int $post_id ): void {
-
-    // Verify nonce.
-    if (
-        ! isset( $_POST['goldenpine_hero_videos_nonce'] ) ||
-        ! wp_verify_nonce(
-            sanitize_text_field( wp_unslash( $_POST['goldenpine_hero_videos_nonce'] ) ),
-            'goldenpine_save_hero_videos'
-        )
-    ) {
-        return;
-    }
 
     // Skip autosave and revisions.
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -204,12 +224,34 @@ function goldenpine_save_video_gallery( int $post_id ): void {
         return;
     }
 
-    $raw    = isset( $_POST['_gpine_hero_videos'] )
-        ? sanitize_text_field( wp_unslash( $_POST['_gpine_hero_videos'] ) )
-        : '';
-    $ids    = array_filter( array_map( 'absint', explode( ',', $raw ) ) );
-    $stored = implode( ',', $ids );
+    // Save PC videos.
+    if (
+        isset( $_POST['goldenpine_hero_videos_nonce_pc'] ) &&
+        wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_POST['goldenpine_hero_videos_nonce_pc'] ) ),
+            'goldenpine_save_hero_videos_pc'
+        )
+    ) {
+        $raw_pc = isset( $_POST['_gpine_hero_videos_pc'] )
+            ? sanitize_text_field( wp_unslash( $_POST['_gpine_hero_videos_pc'] ) )
+            : '';
+        $ids_pc = array_filter( array_map( 'absint', explode( ',', $raw_pc ) ) );
+        update_post_meta( $post_id, '_gpine_hero_videos_pc', implode( ',', $ids_pc ) );
+    }
 
-    update_post_meta( $post_id, '_gpine_hero_videos', $stored );
+    // Save Mobile videos.
+    if (
+        isset( $_POST['goldenpine_hero_videos_nonce_mobile'] ) &&
+        wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_POST['goldenpine_hero_videos_nonce_mobile'] ) ),
+            'goldenpine_save_hero_videos_mobile'
+        )
+    ) {
+        $raw_mobile = isset( $_POST['_gpine_hero_videos_mobile'] )
+            ? sanitize_text_field( wp_unslash( $_POST['_gpine_hero_videos_mobile'] ) )
+            : '';
+        $ids_mobile = array_filter( array_map( 'absint', explode( ',', $raw_mobile ) ) );
+        update_post_meta( $post_id, '_gpine_hero_videos_mobile', implode( ',', $ids_mobile ) );
+    }
 }
 add_action( 'save_post_gpine_video', 'goldenpine_save_video_gallery' );

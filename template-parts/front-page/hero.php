@@ -2,15 +2,17 @@
 /**
  * Template Part — Front Page Hero
  *
- * Full-screen hero section with a video background sourced from the
- * 'gpine_video' CPT gallery field (_gpine_hero_videos post meta).
+ * Full-screen hero section with video backgrounds sourced from the
+ * 'gpine_video' CPT gallery fields:
+ *  - '_gpine_hero_videos_pc' for desktop/tablet (hidden on mobile)
+ *  - '_gpine_hero_videos_mobile' for mobile (hidden on desktop)
  *
  * Videos are cycled by assets/js/page-specific-js/hero-video.js:
  *  - Single video: loops indefinitely.
  *  - Multiple videos: advances to the next on the 'ended' event, loops back.
  *
- * Conditional rendering: if the CPT, its single entry, or the gallery field
- * yields no valid video attachments, the entire <section> is suppressed —
+ * Conditional rendering: if the CPT, its single entry, or both gallery fields
+ * yield no valid video attachments, the entire <section> is suppressed —
  * no empty wrappers or placeholders are output.
  *
  * Ticker items are hardcoded brand phrases; extend via the
@@ -24,16 +26,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // ---------------------------------------------------------------------------
-// Resolve video attachments from the CPT gallery field.
+// Resolve video attachments from the CPT gallery fields (PC and Mobile).
 // ---------------------------------------------------------------------------
 
 /**
  * Returns an array of video data arrays, each with 'id', 'url', 'mime' keys.
  * Returns an empty array when nothing is configured.
  *
+ * @param string $device 'pc' or 'mobile'
  * @return array<int, array{id: int, url: string, mime: string}>
  */
-function goldenpine_get_hero_videos(): array {
+function goldenpine_get_hero_videos( string $device = 'pc' ): array {
 
     // Guard: CPT must be registered.
     if ( ! post_type_exists( 'gpine_video' ) ) {
@@ -53,7 +56,8 @@ function goldenpine_get_hero_videos(): array {
         return [];
     }
 
-    $ids_raw = get_post_meta( $posts[0], '_gpine_hero_videos', true );
+    $meta_key = '_gpine_hero_videos_' . $device;
+    $ids_raw  = get_post_meta( $posts[0], $meta_key, true );
 
     if ( empty( $ids_raw ) ) {
         return [];
@@ -81,12 +85,13 @@ function goldenpine_get_hero_videos(): array {
     return $videos;
 }
 
-$_gpine_hero_videos = goldenpine_get_hero_videos();
+$_gpine_hero_videos_pc     = goldenpine_get_hero_videos( 'pc' );
+$_gpine_hero_videos_mobile = goldenpine_get_hero_videos( 'mobile' );
 
 // ---------------------------------------------------------------------------
 // Conditional render gate — bail completely if no valid videos found.
 // ---------------------------------------------------------------------------
-if ( empty( $_gpine_hero_videos ) ) {
+if ( empty( $_gpine_hero_videos_pc ) && empty( $_gpine_hero_videos_mobile ) ) {
     return;
 }
 
@@ -114,7 +119,8 @@ if ( post_type_exists( 'gpine_marquee' ) ) {
     }
 }
 
-$_gpine_video_count = count( $_gpine_hero_videos );
+$_gpine_video_count_pc     = count( $_gpine_hero_videos_pc );
+$_gpine_video_count_mobile = count( $_gpine_hero_videos_mobile );
 ?>
 
 <section
@@ -127,22 +133,43 @@ $_gpine_video_count = count( $_gpine_hero_videos );
     ================================================================ -->
     <div class="absolute inset-0 z-0" aria-hidden="true">
 
-        <!-- Videos ---------------------------------------------------- -->
-        <div class="hero-videos-container absolute inset-0" data-count="<?php echo esc_attr( $_gpine_video_count ); ?>">
-            <?php foreach ( $_gpine_hero_videos as $i => $video ) : ?>
-                <video
-                    class="hero-video absolute inset-0 w-full h-full object-cover object-center<?php echo 0 === $i ? ' is-active' : ''; ?>"
-                    src="<?php echo esc_url( $video['url'] ); ?>"
-                    type="<?php echo esc_attr( $video['mime'] ); ?>"
-                    <?php echo 1 === $_gpine_video_count ? 'loop' : ''; ?>
-                    autoplay
-                    muted
-                    playsinline
-                    preload="<?php echo 0 === $i ? 'auto' : 'metadata'; ?>"
-                    aria-hidden="true"
-                ></video>
-            <?php endforeach; ?>
-        </div><!-- .hero-videos-container -->
+        <!-- PC Videos (hidden on mobile) ----------------------------- -->
+        <?php if ( ! empty( $_gpine_hero_videos_pc ) ) : ?>
+            <div class="hero-videos-container hidden md:block absolute inset-0" data-count="<?php echo esc_attr( $_gpine_video_count_pc ); ?>" data-device="pc">
+                <?php foreach ( $_gpine_hero_videos_pc as $i => $video ) : ?>
+                    <video
+                        class="hero-video absolute inset-0 w-full h-full object-cover object-center<?php echo 0 === $i ? ' is-active' : ''; ?>"
+                        src="<?php echo esc_url( $video['url'] ); ?>"
+                        type="<?php echo esc_attr( $video['mime'] ); ?>"
+                        <?php echo 1 === $_gpine_video_count_pc ? 'loop' : ''; ?>
+                        autoplay
+                        muted
+                        playsinline
+                        preload="<?php echo 0 === $i ? 'auto' : 'metadata'; ?>"
+                        aria-hidden="true"
+                    ></video>
+                <?php endforeach; ?>
+            </div><!-- .hero-videos-container (PC) -->
+        <?php endif; ?>
+
+        <!-- Mobile Videos (hidden on desktop) ------------------------ -->
+        <?php if ( ! empty( $_gpine_hero_videos_mobile ) ) : ?>
+            <div class="hero-videos-container block md:hidden absolute inset-0" data-count="<?php echo esc_attr( $_gpine_video_count_mobile ); ?>" data-device="mobile">
+                <?php foreach ( $_gpine_hero_videos_mobile as $i => $video ) : ?>
+                    <video
+                        class="hero-video absolute inset-0 w-full h-full object-cover object-center<?php echo 0 === $i ? ' is-active' : ''; ?>"
+                        src="<?php echo esc_url( $video['url'] ); ?>"
+                        type="<?php echo esc_attr( $video['mime'] ); ?>"
+                        <?php echo 1 === $_gpine_video_count_mobile ? 'loop' : ''; ?>
+                        autoplay
+                        muted
+                        playsinline
+                        preload="<?php echo 0 === $i ? 'auto' : 'metadata'; ?>"
+                        aria-hidden="true"
+                    ></video>
+                <?php endforeach; ?>
+            </div><!-- .hero-videos-container (Mobile) -->
+        <?php endif; ?>
 
         <!-- Overlay stack — ordered lightest to darkest --------------- -->
         <div class="absolute inset-0 bg-black/10"></div>
