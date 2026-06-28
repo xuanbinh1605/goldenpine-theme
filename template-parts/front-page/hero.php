@@ -171,24 +171,6 @@ $_gpine_video_count_mobile = count( $_gpine_hero_videos_mobile );
             </div><!-- .hero-videos-container (Mobile) -->
         <?php endif; ?>
 
-        <!-- Overlay stack — ordered lightest to darkest --------------- -->
-        <div class="absolute inset-0 bg-black/10"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60"></div>
-        <div class="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black/70 to-transparent"></div>
-
-        <!-- Film grain noise ------------------------------------------ -->
-        <div
-            class="absolute inset-0 pointer-events-none opacity-[0.06] mix-blend-overlay"
-            style="background-image:url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");background-size:256px 256px"
-        ></div>
-
-        <!-- Scanlines ------------------------------------------------- -->
-        <div
-            class="absolute inset-0 pointer-events-none opacity-[0.025]"
-            style="background-image:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.5) 2px, rgba(0,0,0,0.5) 4px)"
-        ></div>
-
     </div><!-- /background layer -->
 
     <!-- ================================================================
