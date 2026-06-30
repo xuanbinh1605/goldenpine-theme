@@ -229,7 +229,7 @@ function goldenpine_enqueue_assets(): void {
                     'validDate'   => esc_html__( 'Please select a reservation date.', 'goldenpine-theme' ),
                     'validTime'   => esc_html__( 'Please select an arrival time.', 'goldenpine-theme' ),
                     'validGuests' => esc_html__( 'Please select the number of guests.', 'goldenpine-theme' ),
-                    'submitting'  => esc_html__( "Submitting\u2026", 'goldenpine-theme' ),
+                    'submitting'  => esc_html__( 'Submitting...', 'goldenpine-theme' ),
                     'submit'      => esc_html__( 'Confirm Reservation', 'goldenpine-theme' ),
                 ],
             ]
