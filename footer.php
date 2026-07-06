@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 </div><!-- #page -->
 
+<?php get_template_part( 'template-parts/global/floating-social' ); ?>
+
 <?php wp_footer(); ?>
 </body>
 </html>

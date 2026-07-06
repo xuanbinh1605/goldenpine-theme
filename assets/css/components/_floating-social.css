@@ -1,0 +1,127 @@
+/**
+ * Goldenpine Theme — assets/css/components/_floating-social.css
+ *
+ * Floating social media icons (Zalo, Messenger, Phone).
+ * Fixed position at bottom-right with pulse animation.
+ */
+
+/* ==========================================================================
+   Container
+   ========================================================================== */
+.gpine-floating-social {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 9999;
+}
+
+/* ==========================================================================
+   Icon Base Styles
+   ========================================================================== */
+.gpine-floating-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    position: relative;
+}
+
+.gpine-floating-icon:hover {
+    transform: scale(1.1);
+}
+
+.gpine-floating-icon:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Icon Variants (Background Colors)
+   ========================================================================== */
+.gpine-floating-icon-zalo {
+    background: rgb(0, 104, 255);
+}
+
+.gpine-floating-icon-messenger {
+    background: linear-gradient(135deg, #A033FF, #FF5EBA);
+}
+
+.gpine-floating-icon-phone {
+    background: #22c55e;
+}
+
+/* ==========================================================================
+   SVG Icon Sizing
+   ========================================================================== */
+.gpine-floating-icon-zalo svg {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.gpine-floating-icon-messenger svg {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.gpine-floating-icon-phone svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* ==========================================================================
+   Pulse Animation
+   ========================================================================== */
+@keyframes gpine-pulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.gpine-floating-icon-pulse {
+    animation: gpine-pulse 2s infinite;
+}
+
+/* ==========================================================================
+   Responsive (Mobile)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .gpine-floating-social {
+        bottom: 1rem;
+        right: 1rem;
+        gap: 0.5rem;
+    }
+
+    .gpine-floating-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .gpine-floating-icon-zalo svg {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .gpine-floating-icon-messenger svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .gpine-floating-icon-phone svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
