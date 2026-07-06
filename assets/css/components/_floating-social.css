@@ -44,18 +44,12 @@
 }
 
 /* ==========================================================================
-   Icon Variants (Background Colors)
+   Icon Variants (Background - All use gold color)
    ========================================================================== */
-.gpine-floating-icon-zalo {
-    background: rgb(0, 104, 255);
-}
-
-.gpine-floating-icon-messenger {
-    background: linear-gradient(135deg, #A033FF, #FF5EBA);
-}
-
+.gpine-floating-icon-zalo,
+.gpine-floating-icon-messenger,
 .gpine-floating-icon-phone {
-    background: #22c55e;
+    background: var(--gold-main, #e2be3d);
 }
 
 /* ==========================================================================
