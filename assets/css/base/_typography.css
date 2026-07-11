@@ -14,6 +14,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap');
 
 /* ------------------------------------------------------------------
+   UTM Harrington — local display serif
+------------------------------------------------------------------ */
+@font-face {
+    font-family: 'UTM Harrington';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../fonts/UTM-Harrington.ttf') format('truetype');
+}
+
+/* ------------------------------------------------------------------
    Base
 ------------------------------------------------------------------ */
 @font-face {

@@ -17,3 +17,11 @@
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
  }
+
+.font-harrington {
+    font-family: var(--font-harrington);
+}
+
+.text-site-name {
+    color: #39FF14;
+}
