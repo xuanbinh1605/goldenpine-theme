@@ -158,6 +158,28 @@ function goldenpine_customizer_register_events( WP_Customize_Manager $wp_customi
         ]
     );
 
+    // --- Month's Calendar Image ---
+    $wp_customize->add_setting(
+        'goldenpine_events_list_calendar_image',
+        [
+            'default'           => 0,
+            'transport'         => 'refresh',
+            'sanitize_callback' => 'absint',
+        ]
+    );
+    $wp_customize->add_control(
+        new WP_Customize_Media_Control(
+            $wp_customize,
+            'goldenpine_events_list_calendar_image',
+            [
+                'label'       => esc_html__( "Month's Calendar", 'goldenpine-theme' ),
+                'description' => esc_html__( 'Optional calendar image shown above the events list.', 'goldenpine-theme' ),
+                'section'     => 'goldenpine_events_list_section',
+                'mime_type'   => 'image',
+            ]
+        )
+    );
+
     // ===================================================================
     // SECTION 3: CTA
     // ===================================================================

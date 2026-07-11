@@ -22,6 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 $_gpine_ev_list_heading = get_theme_mod( 'goldenpine_events_list_heading', 'Every night, another story.' );
 $_gpine_ev_book_link    = get_theme_mod( 'goldenpine_events_cta_book_link', '/booking' );
 
+$_gpine_ev_calendar_img_id  = absint( get_theme_mod( 'goldenpine_events_list_calendar_image', 0 ) );
+$_gpine_ev_calendar_img_url = $_gpine_ev_calendar_img_id
+	? wp_get_attachment_image_url( $_gpine_ev_calendar_img_id, 'large' )
+	: '';
+$_gpine_ev_calendar_img_alt = $_gpine_ev_calendar_img_id
+	? (string) get_post_meta( $_gpine_ev_calendar_img_id, '_wp_attachment_image_alt', true )
+	: '';
+
 // -----------------------------------------------------------------------
 // Fetch all published events, ordered by event date descending.
 // -----------------------------------------------------------------------
@@ -93,6 +101,18 @@ if ( is_wp_error( $event_types ) ) {
 				?>
 			</p>
 		</div>
+
+		<?php if ( $_gpine_ev_calendar_img_url ) : ?>
+			<div class="events-list-calendar max-w-xs md:max-w-sm md:ml-auto mb-10 md:mb-12">
+				<img
+					src="<?php echo esc_url( $_gpine_ev_calendar_img_url ); ?>"
+					alt="<?php echo esc_attr( $_gpine_ev_calendar_img_alt ?: __( "Month's Calendar", 'goldenpine-theme' ) ); ?>"
+					loading="lazy"
+					decoding="async"
+					class="w-full h-auto object-contain"
+				>
+			</div>
+		<?php endif; ?>
 
 		<!-- Filter Tabs -->
 		<?php if ( ! empty( $event_types ) ) : ?>
