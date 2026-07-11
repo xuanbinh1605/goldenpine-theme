@@ -64,6 +64,8 @@
     --font-harrington:      'UTM Harrington', serif;
     --font-mono:            'JetBrains Mono', 'Courier New', monospace;
 
+    --color-site-name:      #39FF14;
+
     --font-weight-regular:  400;
     --font-weight-medium:   500;
     --font-weight-semibold: 600;
