@@ -24,7 +24,7 @@ $_gpine_ev_book_link    = get_theme_mod( 'goldenpine_events_cta_book_link', '/bo
 
 $_gpine_ev_calendar_img_id  = absint( get_theme_mod( 'goldenpine_events_list_calendar_image', 0 ) );
 $_gpine_ev_calendar_img_url = $_gpine_ev_calendar_img_id
-	? wp_get_attachment_image_url( $_gpine_ev_calendar_img_id, 'large' )
+	? wp_get_attachment_image_url( $_gpine_ev_calendar_img_id, 'full' )
 	: '';
 $_gpine_ev_calendar_img_alt = $_gpine_ev_calendar_img_id
 	? (string) get_post_meta( $_gpine_ev_calendar_img_id, '_wp_attachment_image_alt', true )
