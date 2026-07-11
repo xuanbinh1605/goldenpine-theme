@@ -65,7 +65,7 @@ $_gpine_mobile_link_filter = static function ( $atts ) {
                 >
             <?php endif; ?>
             <div class="flex flex-col leading-tight">
-                <span class="text-sm font-harrington tracking-widest text-site-name uppercase">
+                <span class="text-lg font-harrington tracking-widest text-site-name uppercase">
                     <?php echo esc_html( $site_name ); ?>
                 </span>
             </div>
