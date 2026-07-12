@@ -19,6 +19,14 @@ $heading_line_1  = get_theme_mod( 'goldenpine_front_events_heading_1', 'Tonight 
 $heading_line_2  = get_theme_mod( 'goldenpine_front_events_heading_2', 'calling.' );
 $cta_button_text = get_theme_mod( 'goldenpine_front_events_cta_text', 'All Events' );
 
+$_gpine_front_calendar_img_id  = absint( get_theme_mod( 'goldenpine_front_events_calendar_image', 0 ) );
+$_gpine_front_calendar_img_url = $_gpine_front_calendar_img_id
+	? wp_get_attachment_image_url( $_gpine_front_calendar_img_id, 'full' )
+	: '';
+$_gpine_front_calendar_img_alt = $_gpine_front_calendar_img_id
+	? (string) get_post_meta( $_gpine_front_calendar_img_id, '_wp_attachment_image_alt', true )
+	: '';
+
 // Query the 3 most recently created events (by post date, newest first).
 $events_query = new WP_Query(
 	[
@@ -90,6 +98,18 @@ $smaller_events = array_slice( $events, 1 );
 				</a>
 			</div>
 		</div>
+
+		<?php if ( $_gpine_front_calendar_img_url ) : ?>
+			<div class="events-list-calendar max-w-xs md:max-w-sm md:ml-auto mb-10 md:mb-12">
+				<img
+					src="<?php echo esc_url( $_gpine_front_calendar_img_url ); ?>"
+					alt="<?php echo esc_attr( $_gpine_front_calendar_img_alt ?: __( "Month's Calendar", 'goldenpine-theme' ) ); ?>"
+					loading="lazy"
+					decoding="async"
+					class="w-full h-auto object-contain"
+				>
+			</div>
+		<?php endif; ?>
 
 		<?php if ( $featured_event ) : ?>
 			<?php
