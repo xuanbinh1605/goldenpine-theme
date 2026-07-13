@@ -76,7 +76,7 @@ function goldenpine_register_event_cpt(): void {
 add_action( 'init', 'goldenpine_register_event_cpt' );
 
 // ---------------------------------------------------------------------------
-// Event date helpers — upcoming filter + sort.
+// Event date helpers — upcoming detection + archive sort.
 // ---------------------------------------------------------------------------
 
 /**
@@ -120,7 +120,7 @@ function goldenpine_get_event_effective_end_datetime( int $post_id ): ?DateTimeI
 }
 
 /**
- * Whether an event should still appear in upcoming listings.
+ * Whether an event is still upcoming (used for archive sort grouping).
  *
  * Events without a date are treated as TBA and remain visible.
  *
@@ -163,6 +163,81 @@ function goldenpine_get_event_sort_timestamp( int $post_id ): int {
     $datetime   = goldenpine_parse_event_datetime( $date, $time );
 
     return $datetime ? $datetime->getTimestamp() : PHP_INT_MAX;
+}
+
+/**
+ * Sort events for archive list: upcoming first, past events pushed to the bottom.
+ *
+ * @param WP_Post[] $events Event posts.
+ * @return WP_Post[]
+ */
+function goldenpine_sort_events_for_archive( array $events ): array {
+    usort(
+        $events,
+        static function ( WP_Post $a, WP_Post $b ): int {
+            $a_upcoming = goldenpine_is_event_upcoming( $a->ID );
+            $b_upcoming = goldenpine_is_event_upcoming( $b->ID );
+
+            if ( $a_upcoming && ! $b_upcoming ) {
+                return -1;
+            }
+
+            if ( ! $a_upcoming && $b_upcoming ) {
+                return 1;
+            }
+
+            $a_ts = goldenpine_get_event_sort_timestamp( $a->ID );
+            $b_ts = goldenpine_get_event_sort_timestamp( $b->ID );
+
+            if ( $a_upcoming ) {
+                return $a_ts <=> $b_ts;
+            }
+
+            return $b_ts <=> $a_ts;
+        }
+    );
+
+    return $events;
+}
+
+/**
+ * Get upcoming and TBA events for front-end cards, soonest first.
+ *
+ * Past events are excluded. TBA events appear after dated upcoming events.
+ *
+ * @param int $limit Max events to return. 0 = all.
+ * @return WP_Post[]
+ */
+function goldenpine_get_display_events( int $limit = 0 ): array {
+    $events_query = new WP_Query(
+        [
+            'post_type'      => 'event',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+        ]
+    );
+
+    $events = array_values(
+        array_filter(
+            $events_query->posts,
+            static function ( WP_Post $event ): bool {
+                return goldenpine_is_event_upcoming( $event->ID );
+            }
+        )
+    );
+
+    usort(
+        $events,
+        static function ( WP_Post $a, WP_Post $b ): int {
+            return goldenpine_get_event_sort_timestamp( $a->ID ) <=> goldenpine_get_event_sort_timestamp( $b->ID );
+        }
+    );
+
+    if ( $limit > 0 ) {
+        $events = array_slice( $events, 0, $limit );
+    }
+
+    return $events;
 }
 
 // ---------------------------------------------------------------------------

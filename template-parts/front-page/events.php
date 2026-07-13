@@ -2,7 +2,7 @@
 /**
  * Template Part — Front Page Events Section
  *
- * Displays the latest 3 upcoming events:
+ * Displays the 3 nearest upcoming events (plus TBA):
  *  - First event as a large featured card with "Next Up" badge
  *  - Next 2 events as smaller cards in a 2-column grid
  *
@@ -27,22 +27,12 @@ $_gpine_front_calendar_img_alt = $_gpine_front_calendar_img_id
 	? (string) get_post_meta( $_gpine_front_calendar_img_id, '_wp_attachment_image_alt', true )
 	: '';
 
-// Query the 3 most recently created events (by post date, newest first).
-$events_query = new WP_Query(
-	[
-		'post_type'      => 'event',
-		'post_status'    => 'publish',
-		'posts_per_page' => 3,
-		'orderby'        => 'date',
-		'order'          => 'DESC',
-	]
-);
+// Nearest upcoming + TBA events for featured cards.
+$events = goldenpine_get_display_events( 3 );
 
-if ( ! $events_query->have_posts() ) {
+if ( empty( $events ) ) {
 	return;
 }
-
-$events = $events_query->posts;
 $featured_event = $events[0] ?? null;
 $smaller_events = array_slice( $events, 1 );
 ?>
