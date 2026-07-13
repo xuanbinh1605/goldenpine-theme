@@ -153,27 +153,29 @@ $smaller_events = array_slice( $events, 1 );
 					<!-- Content Column -->
 					<div class="bg-background p-8 md:p-12 flex flex-col justify-between gap-8">
 
-						<!-- Date Block -->
-						<div class="flex items-end gap-5">
-							<div
-								class="font-black text-gold leading-[0.85]"
-								style="font-size:clamp(5rem, 10vw, 9rem)"
-							>
-								<?php echo esc_html( ltrim( $feat_day, '0' ) ); ?>
-							</div>
-							<div class="pb-3 flex flex-col gap-1">
-								<span class="font-black text-foreground text-3xl md:text-4xl leading-none uppercase tracking-tight">
-									<?php echo esc_html( strtoupper( $feat_month ) ); ?>
-								</span>
-								<?php if ( $feat_dow && $feat_time_display ) : ?>
-									<span class="text-sm uppercase tracking-[0.3em] text-foreground/55 font-medium">
-										<?php echo esc_html( strtoupper( $feat_dow ) ); ?>
-										&nbsp;·&nbsp;
-										<?php echo esc_html( $feat_time_display ); ?>
+						<?php if ( $feat_date ) : ?>
+							<!-- Date Block -->
+							<div class="flex items-end gap-5">
+								<div
+									class="font-black text-gold leading-[0.85]"
+									style="font-size:clamp(5rem, 10vw, 9rem)"
+								>
+									<?php echo esc_html( ltrim( $feat_day, '0' ) ); ?>
+								</div>
+								<div class="pb-3 flex flex-col gap-1">
+									<span class="font-black text-foreground text-3xl md:text-4xl leading-none uppercase tracking-tight">
+										<?php echo esc_html( strtoupper( $feat_month ) ); ?>
 									</span>
-								<?php endif; ?>
+									<?php if ( $feat_dow && $feat_time_display ) : ?>
+										<span class="text-sm uppercase tracking-[0.3em] text-foreground/55 font-medium">
+											<?php echo esc_html( strtoupper( $feat_dow ) ); ?>
+											&nbsp;·&nbsp;
+											<?php echo esc_html( $feat_time_display ); ?>
+										</span>
+									<?php endif; ?>
+								</div>
 							</div>
-						</div>
+						<?php endif; ?>
 
 						<!-- Title + Subtitle -->
 						<div>
@@ -259,15 +261,17 @@ $smaller_events = array_slice( $events, 1 );
 							<?php endif; ?>
 							<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 
-							<!-- Date Badge -->
-							<div class="absolute top-5 left-5 rounded-2xl bg-black/70 backdrop-blur px-4 py-2 flex items-end gap-2">
-								<span class="font-black text-gold leading-none text-3xl">
-									<?php echo esc_html( ltrim( $evt_day, '0' ) ); ?>
-								</span>
-								<span class="text-xs uppercase tracking-widest text-white/85 pb-0.5 font-bold">
-									<?php echo esc_html( strtoupper( $evt_month ) ); ?>
-								</span>
-							</div>
+							<?php if ( $evt_date ) : ?>
+								<!-- Date Badge -->
+								<div class="absolute top-5 left-5 rounded-2xl bg-black/70 backdrop-blur px-4 py-2 flex items-end gap-2">
+									<span class="font-black text-gold leading-none text-3xl">
+										<?php echo esc_html( ltrim( $evt_day, '0' ) ); ?>
+									</span>
+									<span class="text-xs uppercase tracking-widest text-white/85 pb-0.5 font-bold">
+										<?php echo esc_html( strtoupper( $evt_month ) ); ?>
+									</span>
+								</div>
+							<?php endif; ?>
 						</div>
 
 						<!-- Content -->
