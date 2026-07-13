@@ -31,8 +31,10 @@ $_gpine_ev_calendar_img_alt = $_gpine_ev_calendar_img_id
 	: '';
 
 // -----------------------------------------------------------------------
-// Fetch all published events, ordered by event date descending.
+// Fetch upcoming published events, soonest first.
 // -----------------------------------------------------------------------
+$today = wp_date( 'Y-m-d' );
+
 $events_query = new WP_Query(
 	[
 		'post_type'      => 'event',
@@ -41,26 +43,56 @@ $events_query = new WP_Query(
 		'meta_key'       => '_gpine_event_date',
 		'orderby'        => 'meta_value',
 		'order'          => 'ASC',
+		'meta_query'     => [
+			[
+				'key'     => '_gpine_event_date',
+				'value'   => $today,
+				'compare' => '>=',
+				'type'    => 'DATE',
+			],
+		],
 	]
 );
 
-// Also fetch events that have no date set, appended after dated ones.
+// Events without a date (TBA) are appended after dated upcoming events.
 $events_no_date = new WP_Query(
 	[
 		'post_type'      => 'event',
 		'post_status'    => 'publish',
 		'posts_per_page' => -1,
 		'meta_query'     => [
+			'relation' => 'OR',
 			[
 				'key'     => '_gpine_event_date',
 				'compare' => 'NOT EXISTS',
+			],
+			[
+				'key'     => '_gpine_event_date',
+				'value'   => '',
+				'compare' => '=',
 			],
 		],
 	]
 );
 
+$dated_events = array_values(
+	array_filter(
+		$events_query->posts,
+		static function ( WP_Post $event ): bool {
+			return goldenpine_is_event_upcoming( $event->ID );
+		}
+	)
+);
+
+usort(
+	$dated_events,
+	static function ( WP_Post $a, WP_Post $b ): int {
+		return goldenpine_get_event_sort_timestamp( $a->ID ) <=> goldenpine_get_event_sort_timestamp( $b->ID );
+	}
+);
+
 $all_events = array_merge(
-	$events_query->posts,
+	$dated_events,
 	$events_no_date->posts
 );
 

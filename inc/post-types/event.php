@@ -76,6 +76,96 @@ function goldenpine_register_event_cpt(): void {
 add_action( 'init', 'goldenpine_register_event_cpt' );
 
 // ---------------------------------------------------------------------------
+// Event date helpers — upcoming filter + sort.
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse an event date/time string into a site-timezone DateTimeImmutable.
+ *
+ * @param string $date YYYY-MM-DD.
+ * @param string $time HH:MM.
+ * @return DateTimeImmutable|null
+ */
+function goldenpine_parse_event_datetime( string $date, string $time ): ?DateTimeImmutable {
+    if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) || ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
+        return null;
+    }
+
+    $datetime = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' ' . $time, wp_timezone() );
+
+    return $datetime instanceof DateTimeImmutable ? $datetime : null;
+}
+
+/**
+ * Timestamp used to decide when an event is no longer upcoming.
+ *
+ * Uses end time when available; otherwise keeps the event visible until end of day.
+ *
+ * @param int $post_id Event post ID.
+ * @return DateTimeImmutable|null Null when the event has no valid date.
+ */
+function goldenpine_get_event_effective_end_datetime( int $post_id ): ?DateTimeImmutable {
+    $date = (string) get_post_meta( $post_id, '_gpine_event_date', true );
+    if ( '' === $date ) {
+        return null;
+    }
+
+    $end_time = (string) get_post_meta( $post_id, '_gpine_event_end_time', true );
+
+    if ( '' !== $end_time ) {
+        return goldenpine_parse_event_datetime( $date, $end_time );
+    }
+
+    return goldenpine_parse_event_datetime( $date, '23:59' );
+}
+
+/**
+ * Whether an event should still appear in upcoming listings.
+ *
+ * Events without a date are treated as TBA and remain visible.
+ *
+ * @param int $post_id Event post ID.
+ * @return bool
+ */
+function goldenpine_is_event_upcoming( int $post_id ): bool {
+    $date = (string) get_post_meta( $post_id, '_gpine_event_date', true );
+
+    if ( '' === $date ) {
+        return true;
+    }
+
+    $effective_end = goldenpine_get_event_effective_end_datetime( $post_id );
+
+    if ( ! $effective_end ) {
+        return true;
+    }
+
+    $now = new DateTimeImmutable( 'now', wp_timezone() );
+
+    return $effective_end >= $now;
+}
+
+/**
+ * Sort key for upcoming events — earliest first.
+ *
+ * @param int $post_id Event post ID.
+ * @return int
+ */
+function goldenpine_get_event_sort_timestamp( int $post_id ): int {
+    $date = (string) get_post_meta( $post_id, '_gpine_event_date', true );
+
+    if ( '' === $date ) {
+        return PHP_INT_MAX;
+    }
+
+    $start_time = (string) get_post_meta( $post_id, '_gpine_event_start_time', true );
+    $time       = '' !== $start_time ? $start_time : '00:00';
+    $datetime   = goldenpine_parse_event_datetime( $date, $time );
+
+    return $datetime ? $datetime->getTimestamp() : PHP_INT_MAX;
+}
+
+// ---------------------------------------------------------------------------
 // Front-end archive: order events by event date ascending (soonest first).
 // Events without a date fall to the end via a secondary query in the template.
 // ---------------------------------------------------------------------------
