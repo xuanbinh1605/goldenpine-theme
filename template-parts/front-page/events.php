@@ -2,7 +2,7 @@
 /**
  * Template Part — Front Page Events Section
  *
- * Displays the 3 nearest upcoming events (plus TBA):
+ * Displays 3 events — upcoming/TBA first, past events fill remaining slots:
  *  - First event as a large featured card with "Next Up" badge
  *  - Next 2 events as smaller cards in a 2-column grid
  *
@@ -27,7 +27,7 @@ $_gpine_front_calendar_img_alt = $_gpine_front_calendar_img_id
 	? (string) get_post_meta( $_gpine_front_calendar_img_id, '_wp_attachment_image_alt', true )
 	: '';
 
-// Nearest upcoming + TBA events for featured cards.
+// Upcoming/TBA first, past events after — same order as archive list.
 $events = goldenpine_get_display_events( 3 );
 
 if ( empty( $events ) ) {

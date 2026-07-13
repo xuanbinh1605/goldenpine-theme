@@ -201,9 +201,7 @@ function goldenpine_sort_events_for_archive( array $events ): array {
 }
 
 /**
- * Get upcoming and TBA events for front-end cards, soonest first.
- *
- * Past events are excluded. TBA events appear after dated upcoming events.
+ * Get events for front-end cards: upcoming/TBA first, past events after.
  *
  * @param int $limit Max events to return. 0 = all.
  * @return WP_Post[]
@@ -217,21 +215,7 @@ function goldenpine_get_display_events( int $limit = 0 ): array {
         ]
     );
 
-    $events = array_values(
-        array_filter(
-            $events_query->posts,
-            static function ( WP_Post $event ): bool {
-                return goldenpine_is_event_upcoming( $event->ID );
-            }
-        )
-    );
-
-    usort(
-        $events,
-        static function ( WP_Post $a, WP_Post $b ): int {
-            return goldenpine_get_event_sort_timestamp( $a->ID ) <=> goldenpine_get_event_sort_timestamp( $b->ID );
-        }
-    );
+    $events = goldenpine_sort_events_for_archive( $events_query->posts );
 
     if ( $limit > 0 ) {
         $events = array_slice( $events, 0, $limit );
