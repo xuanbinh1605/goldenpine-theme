@@ -134,7 +134,7 @@ $smaller_events = array_slice( $events, 1 );
 			<div class="grid grid-cols-1 lg:grid-cols-2">
 
 					<!-- Image Column -->
-					<div class="relative h-[320px] lg:h-full min-h-[360px]">
+					<div class="gpine-featured-event__media relative h-[360px] md:h-[480px] min-h-[260px]">
 						<?php if ( $feat_image_url ) : ?>
 							<img
 								alt="<?php echo esc_attr( get_the_title( $featured_event->ID ) ); ?>"
