@@ -135,10 +135,9 @@ $_gpine_explore_link_filter = static function ( $atts ) {
                         </a>
                     <?php endif; ?>
                     <div>
-                        <p class="text-base font-black tracking-widest text-gold uppercase">
+                        <p class="text-lg font-harrington tracking-widest text-site-name uppercase">
                             <?php echo esc_html( $site_name ); ?>
                         </p>
-                        <p class="text-xs tracking-[0.3em] uppercase text-white/60">Da Nang</p>
                     </div>
                 </div>
 
