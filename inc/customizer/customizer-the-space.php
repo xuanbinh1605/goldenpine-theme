@@ -3,11 +3,11 @@
  * Goldenpine Theme — inc/customizer/customizer-the-space.php
  *
  * Customizer settings for the Space section on the front page.
- * Manages section label, headings, 3 image cards (with titles), description,
+ * Manages section label, headings, 6 image cards (with titles), description,
  * and the social CTA card.
  *
  * Images are stored as attachment IDs. If no image is set, the card
- * image is simply not rendered.
+ * is not rendered.
  *
  * @package GoldenpineTheme
  */
@@ -121,124 +121,48 @@ function goldenpine_customizer_register_the_space( WP_Customize_Manager $wp_cust
     );
 
     // ===================================================================
-    // Card 1 — The Shows
+    // Image Cards (6)
     // ===================================================================
-    $wp_customize->add_setting(
-        'goldenpine_space_card1_image',
-        [
-            'default'           => 0,
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'absint',
-        ]
-    );
-    $wp_customize->add_control(
-        new WP_Customize_Media_Control(
-            $wp_customize,
-            'goldenpine_space_card1_image',
+    $card_titles = [ 'The Shows', 'The Crowd', 'The Venue', '', '', '' ];
+
+    for ( $i = 1; $i <= 6; $i++ ) {
+        $wp_customize->add_setting(
+            "goldenpine_space_card{$i}_image",
             [
-                'label'     => esc_html__( 'Card 1 — Image', 'goldenpine-theme' ),
-                'section'   => 'goldenpine_space_section',
-                'mime_type' => 'image',
+                'default'           => 0,
+                'transport'         => 'refresh',
+                'sanitize_callback' => 'absint',
             ]
-        )
-    );
+        );
+        $wp_customize->add_control(
+            new WP_Customize_Media_Control(
+                $wp_customize,
+                "goldenpine_space_card{$i}_image",
+                [
+                    'label'     => sprintf( esc_html__( 'Card %d — Image', 'goldenpine-theme' ), $i ),
+                    'section'   => 'goldenpine_space_section',
+                    'mime_type' => 'image',
+                ]
+            )
+        );
 
-    $wp_customize->add_setting(
-        'goldenpine_space_card1_title',
-        [
-            'default'           => 'The Shows',
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'sanitize_text_field',
-        ]
-    );
-    $wp_customize->add_control(
-        'goldenpine_space_card1_title',
-        [
-            'label'   => esc_html__( 'Card 1 — Title', 'goldenpine-theme' ),
-            'section' => 'goldenpine_space_section',
-            'type'    => 'text',
-        ]
-    );
-
-    // ===================================================================
-    // Card 2 — The Crowd
-    // ===================================================================
-    $wp_customize->add_setting(
-        'goldenpine_space_card2_image',
-        [
-            'default'           => 0,
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'absint',
-        ]
-    );
-    $wp_customize->add_control(
-        new WP_Customize_Media_Control(
-            $wp_customize,
-            'goldenpine_space_card2_image',
+        $wp_customize->add_setting(
+            "goldenpine_space_card{$i}_title",
             [
-                'label'     => esc_html__( 'Card 2 — Image', 'goldenpine-theme' ),
-                'section'   => 'goldenpine_space_section',
-                'mime_type' => 'image',
+                'default'           => $card_titles[ $i - 1 ],
+                'transport'         => 'refresh',
+                'sanitize_callback' => 'sanitize_text_field',
             ]
-        )
-    );
-
-    $wp_customize->add_setting(
-        'goldenpine_space_card2_title',
-        [
-            'default'           => 'The Crowd',
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'sanitize_text_field',
-        ]
-    );
-    $wp_customize->add_control(
-        'goldenpine_space_card2_title',
-        [
-            'label'   => esc_html__( 'Card 2 — Title', 'goldenpine-theme' ),
-            'section' => 'goldenpine_space_section',
-            'type'    => 'text',
-        ]
-    );
-
-    // ===================================================================
-    // Card 3 — The Venue
-    // ===================================================================
-    $wp_customize->add_setting(
-        'goldenpine_space_card3_image',
-        [
-            'default'           => 0,
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'absint',
-        ]
-    );
-    $wp_customize->add_control(
-        new WP_Customize_Media_Control(
-            $wp_customize,
-            'goldenpine_space_card3_image',
+        );
+        $wp_customize->add_control(
+            "goldenpine_space_card{$i}_title",
             [
-                'label'     => esc_html__( 'Card 3 — Image', 'goldenpine-theme' ),
-                'section'   => 'goldenpine_space_section',
-                'mime_type' => 'image',
+                'label'   => sprintf( esc_html__( 'Card %d — Title', 'goldenpine-theme' ), $i ),
+                'section' => 'goldenpine_space_section',
+                'type'    => 'text',
             ]
-        )
-    );
-
-    $wp_customize->add_setting(
-        'goldenpine_space_card3_title',
-        [
-            'default'           => 'The Venue',
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'sanitize_text_field',
-        ]
-    );
-    $wp_customize->add_control(
-        'goldenpine_space_card3_title',
-        [
-            'label'   => esc_html__( 'Card 3 — Title', 'goldenpine-theme' ),
-            'section' => 'goldenpine_space_section',
-            'type'    => 'text',
-        ]
-    );
+        );
+    }
 
     // ===================================================================
     // Social CTA Card

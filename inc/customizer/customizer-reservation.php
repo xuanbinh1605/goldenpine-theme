@@ -196,5 +196,58 @@ function goldenpine_customizer_register_reservation( WP_Customize_Manager $wp_cu
             'type'        => 'text',
         ]
     );
+
+    // --- Google Maps --------------------------------------------------
+    $wp_customize->add_setting(
+        'goldenpine_reservation_map_query',
+        [
+            'default'           => '',
+            'transport'         => 'refresh',
+            'sanitize_callback' => 'sanitize_text_field',
+        ]
+    );
+    $wp_customize->add_control(
+        'goldenpine_reservation_map_query',
+        [
+            'label'       => esc_html__( 'Map Address', 'goldenpine-theme' ),
+            'description' => esc_html__( 'Type the venue address. Google Maps will be embedded automatically. Leave empty to hide the map.', 'goldenpine-theme' ),
+            'section'     => 'goldenpine_reservation_section',
+            'type'        => 'text',
+        ]
+    );
+
+    $wp_customize->add_setting(
+        'goldenpine_reservation_map_name',
+        [
+            'default'           => '',
+            'transport'         => 'refresh',
+            'sanitize_callback' => 'sanitize_text_field',
+        ]
+    );
+    $wp_customize->add_control(
+        'goldenpine_reservation_map_name',
+        [
+            'label'   => esc_html__( 'Map Overlay — Venue Name', 'goldenpine-theme' ),
+            'section' => 'goldenpine_reservation_section',
+            'type'    => 'text',
+        ]
+    );
+
+    $wp_customize->add_setting(
+        'goldenpine_reservation_map_address',
+        [
+            'default'           => '',
+            'transport'         => 'refresh',
+            'sanitize_callback' => 'sanitize_text_field',
+        ]
+    );
+    $wp_customize->add_control(
+        'goldenpine_reservation_map_address',
+        [
+            'label'   => esc_html__( 'Map Overlay — Short Address', 'goldenpine-theme' ),
+            'section' => 'goldenpine_reservation_section',
+            'type'    => 'text',
+        ]
+    );
 }
 add_action( 'customize_register', 'goldenpine_customizer_register_reservation' );

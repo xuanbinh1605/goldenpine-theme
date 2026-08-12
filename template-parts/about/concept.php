@@ -2,7 +2,7 @@
 /**
  * Template Part — About Page Concept & Space Section
  *
- * Showcases 4 themed photo cards (Fire & Aerial, Cultural, Showcase, Seasonal)
+ * Showcases 8 themed photo cards
  * followed by a social media CTA card with Instagram and Facebook links.
  *
  * Content managed via Appearance > Customize > About Page > Concept.
@@ -19,15 +19,20 @@ $heading1 = get_theme_mod( 'goldenpine_about_page_concept_h1', 'Every season,' )
 $heading2 = get_theme_mod( 'goldenpine_about_page_concept_h2', 'a new world.' );
 $subtext  = get_theme_mod( 'goldenpine_about_page_concept_subtext', 'Built to transform — never the same visit twice.' );
 
-// 4 image cards
+// 8 image cards — skip entries without an image.
 $cards = [];
-for ( $i = 1; $i <= 4; $i++ ) {
+for ( $i = 1; $i <= 8; $i++ ) {
 	$image_id   = absint( get_theme_mod( "goldenpine_about_page_concept_card{$i}_image", 0 ) );
 	$image_url  = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : '';
+
+	if ( ! $image_url ) {
+		continue;
+	}
+
 	$image_alt  = $image_id ? (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '';
 	$title      = get_theme_mod( "goldenpine_about_page_concept_card{$i}_title", '' );
 
-	$is_gif    = $image_url && strtolower( pathinfo( $image_url, PATHINFO_EXTENSION ) ) === 'gif';
+	$is_gif    = strtolower( pathinfo( $image_url, PATHINFO_EXTENSION ) ) === 'gif';
 	// For GIFs: use the medium-sized thumbnail (static first frame on most hosts) as the poster.
 	$poster_url = ( $is_gif && $image_id )
 		? ( wp_get_attachment_image_url( $image_id, 'medium' ) ?: $image_url )
@@ -83,11 +88,11 @@ $facebook_url   = get_theme_mod( 'goldenpine_social_facebook', 'https://www.face
 			<?php endif; ?>
 		</div>
 
-		<!-- 4 Image Cards -->
-		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-			<?php foreach ( $cards as $card ) : ?>
-				<div class="relative overflow-hidden rounded-3xl h-56 md:h-80 group box-glow-gold-hover <?php echo $card['is_gif'] ? 'gpine-gif-card' : ''; ?>">
-					<?php if ( $card['url'] ) : ?>
+		<!-- 8 Image Cards -->
+		<?php if ( $cards ) : ?>
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+				<?php foreach ( $cards as $card ) : ?>
+					<div class="relative overflow-hidden rounded-3xl h-56 md:h-80 group box-glow-gold-hover <?php echo $card['is_gif'] ? 'gpine-gif-card' : ''; ?>">
 						<img
 							src="<?php echo esc_url( $card['poster_url'] ); ?>"
 							<?php if ( $card['is_gif'] ) : ?>
@@ -99,21 +104,19 @@ $facebook_url   = get_theme_mod( 'goldenpine_social_facebook', 'https://www.face
 							class="object-cover transition-transform duration-700 group-hover:scale-105"
 							style="position: absolute; height: 100%; width: 100%; inset: 0px;"
 						>
-					<?php else : ?>
-						<div class="absolute inset-0 bg-background"></div>
-					<?php endif; ?>
-					<div class="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-gold/40 transition-all duration-500 pointer-events-none"></div>
-					<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-					<?php if ( $card['title'] ) : ?>
-						<div class="absolute bottom-5 left-5">
-							<h3 class="font-black uppercase text-white text-xl md:text-2xl leading-none tracking-tight">
-								<?php echo esc_html( $card['title'] ); ?>
-							</h3>
-						</div>
-					<?php endif; ?>
-				</div>
-			<?php endforeach; ?>
-		</div>
+						<div class="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-gold/40 transition-all duration-500 pointer-events-none"></div>
+						<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+						<?php if ( $card['title'] ) : ?>
+							<div class="absolute bottom-5 left-5">
+								<h3 class="font-black uppercase text-white text-xl md:text-2xl leading-none tracking-tight">
+									<?php echo esc_html( $card['title'] ); ?>
+								</h3>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
 
 		<!-- Social CTA Card -->
 		<div class="rounded-3xl border border-border bg-background p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">

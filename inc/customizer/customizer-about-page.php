@@ -7,7 +7,7 @@
  *
  *  1. Hero Section    — background image, label, heading
  *  2. Story Section   — image, heading, text, CTA button
- *  3. Concept Section — 4 image cards + social media CTA
+ *  3. Concept Section — 8 image cards + social media CTA
  *  4. Music Section   — 4 music genre cards + booking CTA
  *
  * Social media URLs (Instagram, Facebook) are shared from
@@ -182,9 +182,9 @@ function goldenpine_customizer_register_about_page( WP_Customize_Manager $wp_cus
         'type'    => 'text',
     ] );
 
-    // 4 image cards
-    $card_labels = [ 'Fire & Aerial', 'Cultural', 'Showcase', 'Seasonal' ];
-    for ( $i = 1; $i <= 4; $i++ ) {
+    // 8 image cards
+    $card_labels = [ 'Fire & Aerial', 'Cultural', 'Showcase', 'Seasonal', '', '', '', '' ];
+    for ( $i = 1; $i <= 8; $i++ ) {
         $wp_customize->add_setting( "goldenpine_about_page_concept_card{$i}_image", [ 'default' => 0, 'sanitize_callback' => 'absint' ] );
         $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, "goldenpine_about_page_concept_card{$i}_image", [
             'label'    => sprintf( esc_html__( 'Card %d Image', 'goldenpine-theme' ), $i ),

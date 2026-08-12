@@ -1050,6 +1050,10 @@
         height: 300px
     }
 
+    .h-\[320px\] {
+        height: 320px
+    }
+
     .h-\[360px\] {
         height: 360px
     }
@@ -5311,9 +5315,19 @@
         .md\:h-80 {
             height: calc(var(--spacing) * 80)
         }
+        .md\:h-screen {
+            height: 100vh
+        }
+
+        .md\:h-\[400px\] {
+            height: 400px
+        }
 
         .md\:h-\[480px\] {
             height: 480px
+        }
+        .md\:h-\[520px\] {
+            height: 520px
         }
 
         .md\:h-\[600px\] {

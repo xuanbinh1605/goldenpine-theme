@@ -4,7 +4,7 @@
  *
  * Reservation / Book A Table section for the front page.
  * Displays a full-bleed background image with gradient overlays,
- * a centered heading, description, and two CTA buttons.
+ * a centered heading, description, CTA buttons, and optional Google Maps embed.
  *
  * The background image is fetched from WordPress media by attachment ID.
  * If no image is set the section renders without an image (plain dark bg).
@@ -36,6 +36,14 @@ $_gpine_res_bg_img_alt = $_gpine_res_bg_img_id ? get_post_meta( $_gpine_res_bg_i
 
 // Phone from existing footer setting.
 $_gpine_res_phone      = get_theme_mod( 'goldenpine_footer_phone', '' );
+
+// Google Maps — embed URL built from a plain address string.
+$_gpine_res_map_query   = get_theme_mod( 'goldenpine_reservation_map_query', '' );
+$_gpine_res_map_embed   = $_gpine_res_map_query
+    ? 'https://maps.google.com/maps?q=' . rawurlencode( $_gpine_res_map_query ) . '&output=embed'
+    : '';
+$_gpine_res_map_name    = get_theme_mod( 'goldenpine_reservation_map_name', '' );
+$_gpine_res_map_address = get_theme_mod( 'goldenpine_reservation_map_address', '' );
 ?>
 
 <section id="book" class="relative py-24 md:py-36 px-6 lg:px-12 overflow-hidden">
@@ -127,6 +135,39 @@ $_gpine_res_phone      = get_theme_mod( 'goldenpine_footer_phone', '' );
             <?php endif; ?>
 
         </div>
+
+        <!-- Google Maps -->
+        <?php if ( $_gpine_res_map_embed ) : ?>
+            <div class="mt-12 md:mt-16 max-w-4xl mx-auto">
+                <div class="rounded-3xl border border-white/20 overflow-hidden h-[320px] md:h-[400px] relative bg-black/40">
+                    <iframe
+                        src="<?php echo esc_url( $_gpine_res_map_embed ); ?>"
+                        width="100%"
+                        height="100%"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="<?php echo esc_attr( $_gpine_res_map_name ?: $_gpine_res_label ); ?>"
+                        class="h-full w-full"
+                        style="border: 0px;"
+                    ></iframe>
+                    <?php if ( $_gpine_res_map_name || $_gpine_res_map_address ) : ?>
+                        <div class="absolute top-5 left-5 rounded-2xl bg-background/92 backdrop-blur border border-gold px-5 py-3 shadow-lg">
+                            <?php if ( $_gpine_res_map_name ) : ?>
+                                <p class="text-[10px] tracking-widest uppercase text-gold font-black">
+                                    <?php echo esc_html( $_gpine_res_map_name ); ?>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ( $_gpine_res_map_address ) : ?>
+                                <p class="text-xs text-foreground mt-0.5">
+                                    <?php echo esc_html( $_gpine_res_map_address ); ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
 
     </div>
 
